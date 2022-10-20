@@ -1,0 +1,22 @@
+{% extends 'service_providers/layout.html'%}
+{% block content%}
+<div class="col-md-5 m-2 ">
+  <form action="" class="bg-white p-3" style="box-shadow: 2px 2px 5px;">
+    <h2 style="font-family:'Unna', serif;" class="title">Ask a Question</h2>
+    <div class="mb-3">
+      <input type="text" required name="fname" class="form-control" placeholder="Enter Your name">
+    </div>
+    <div class="mb-3">
+      <input type="text " required name="email" class="form-control" placeholder="Enter Your Email">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Enter Your Question</label>
+      <textarea class="form-control" required name="question" id="" cols="30" rows="10"></textarea>
+    </div>
+    <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+    <div>
+      <button class="btn btn-danger">Send</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

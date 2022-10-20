@@ -1,0 +1,41 @@
+{% extends 'service_providers/layout.html' %}
+{% block content %}
+  <section>
+    <div class="container-fluid">
+      <div class="row"  style="justify-content: center;">
+        <div class="col-md-4">
+          <div>
+            <form class="bg-white p-4 col-12 rounded" style="box-shadow: 2px 2px 5px;">
+              <h2 class="text-primary text-center" style="font-family: Unna,Serif;">Subscribe</h2>
+              <div class="mb-3">
+                <label for="fname" class="form-label">First Name</label>
+                <input class="form-control" required id="fname" name="sp_fname" placeholder="Enter your First name">
+              </div>
+              <div class="mb-3">
+                <label for="lname" class="form-label">Last Name</label>
+                <input class="form-control" required id="lname" name="sp_lname" placeholder="Enter your Last name">
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input class="form-control" required id="email" name="sp_email" placeholder="Enter your Last name">
+              </div>
+              <div class="mb-3">
+                <label for="sp_type" class="form-label">Subscription Type</label>
+                <select class="form-select" required name="sp_type" id="sp_type">
+                  <option value="">Select Subscription Type</option>
+                  <option value="silver">Silver</option>
+                  <option value="gold">Gold</option>
+                  <option value="platinum">Platinum</option>
+                </select>
+              </div>
+              <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+              <div>
+                <button class="btn btn-primary" type="submit">Subscribe</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
