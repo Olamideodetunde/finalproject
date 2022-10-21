@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profiles</title>
+  <link rel="stylesheet" href="../static/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" href="../static/css/animate.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unna:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../static/css/hire.css">
+</head>
+<body style="background-color: #EFFFFA;">
+  <nav class="sticky-top" style="box-shadow: 2px 1px 3px;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <nav class="navbar navbar-expand-lg" style="background-color: #EFFFFA;">
+            <div class="container-fluid">
+            <a class="navbar-brand animate__animated animate__pulse animate__infinite" id="hire" href="{{url_for('home_page')}}"><b>HIRE</b></a>
+            <button class="navbar-toggler navbar-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a style="font-size: 20px;font-family:'Unna', serif;" class="nav-link title" href="{{url_for('profile_page')}}">Profiles</a>
+                </li>
+              </ul>
+              <div class="d-inline-block">
+                <a href="{{url_for('form_page')}}" style="font-family:'Unna', serif;" class="btn btn-outline-dark">Login</a>
+                <a href="{{url_for('signup_page')}}" style="font-family:'Unna', serif;" class="btn btn-primary">Sign Up</a>
+              </div>
+            </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+  </nav>
+  <section>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../static/js/jquery.min.js"></script>
+</body>
+</html>

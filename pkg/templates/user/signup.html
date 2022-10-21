@@ -36,10 +36,10 @@
           <h1 style="font-family:'Unna', serif;" class="text-center mb-5">Sign Up</h1>
           <div id="errormsage"></div>
           <div class="row mb-3">
-              <div class="col-md-6">
+              <div class="col-6">
                 {{y.fname(class_='form-control' , placeholder='Enter Your Fullname')}}
               </div>
-              <div class="col-md-6">
+              <div class="col-6">
                 {{y.lname(class_='form-control', placeholder='Enter Your Last Name')}}
               </div>
           </div>
@@ -47,7 +47,7 @@
             <div class="col-md-6">
               {{y.emailadd(class_='form-control', placeholder='Enter Your Email Address')}}
             </div>
-            <div class="col-md-6">
+            <div class="col-6">
               {{y.phone(class_='form-control', placeholder='Enter Your Phone Number')}}
             </div>
           </div>
@@ -55,7 +55,7 @@
             <div class="col-md-6">
               {{y.password(class_='form-control', placeholder='Enter Your Password')}}
             </div>
-            <div class="col-md-6">
+            <div class="col-6">
               {{y.confirmpwd(class_='form-control', placeholder='Confirm  Your Password')}}
             </div>
           </div>
@@ -63,7 +63,7 @@
             <div class="col-md-6">
               {{y.address(class_='form-control', placeholder='Enter Your Address')}}
             </div>
-            <div class="col-md-6">
+            <div class="col-6">
               <div>
                 <input type="radio" name="gender" value="2" class="form-radio">
                 <label for="male">Male</label>
@@ -79,7 +79,7 @@
             </div>
           </div>
           <div class="row mb-3">
-            <div class="col-md-12">
+            <div class="col-12">
               <select name="state" id="state" class="form-select user" required>
                 <option value="">Select your State of Residence</option>
                 {% for i in state%}

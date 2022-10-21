@@ -2,38 +2,54 @@
 {% block content%}
 <form action="" method="post" class="p-md-5" enctype="multipart/form-data">
   <div class="mb-3">
-    <input type="file" class="form-file" placeholder="Select a Profile Picture">
+    <label for="">Upload Profile Photo</label>
+    <input type="file" name="file" class="form-control">
   </div>
   <div class="mb-3">
-    {{b.fname(class_='form-control',placeholder='Enter Your First Name',value='{{records.sp_fname}}')}}
+    <label for="">Firstname</label>
+    <input type="text" value="{{records.sp_fname}}" name="fname" placeholder="Enter Your Firstname" class="form-control">
   </div>
   <div class="mb-3">
-    {{b.lname(class_='form-control',placeholder='Enter Your Last Name',value='{{records.sp_lname}}' )}}
+    <label for="">Lastname</label>
+    <input type="text" name="lname" value="{{records.sp_lname}}" placeholder="Enter Your Lastname" class="form-control">
   </div>
   <div class="mb-3">
-    {{b.phone(class_='form-control',placeholder='Enter Your Phone Number',value='{{records.sp_phone}}')}}
+    <label for="">Phone Number</label>
+    <input type="text" name="phone" value="{{records.sp_phone}}" placeholder="Enter Your Phone Number" class="form-control">
   </div>
   <div class="mb-3">
-    {{b.address(class_='form-control',placeholder='Enter Your Address',value='{{records.sp_address}}')}}
+    <label for="">Address</label>
+    <textarea name="lname"  placeholder="Enter Your Address" class="form-control">{{records.sp_address}}</textarea>
   </div>
   <div class="mb-3">
     <select name="service" id="" class="form-select">
       <option value="">Select Your Service</option>
-      
+      {% for u in service%}
+        <option value="{{u.service_id}}">{{u.service_name}}</option>
+      {% endfor %}
     </select>
   </div>
   <div class="mb-3">
     <select name="state" id="" class="form-select">
       <option value="">Select Your State</option>
-      {% for i in deets%}
-        <option value="{{i.statedeets.state_id}}">{{i.statedeets.state_name}}</option>
+      {% for i in records1%}
+        <option value="{{i.state_id}}">{{i.state_name}}</option>
       {% endfor %}
     </select>
   </div>
   <div class="mb-3">
-    {% for i in deets%}
-    <input type="radio" name="gender" class="form-radio" value="{{i.genderdeets.gender_id}}" id="{{i.genderdeets.gender_name}}"><label for="{{i.genderdeets.gender_name}}">{{i.genderdeets.gender_name}}</label>
-    {% endfor %}
+    <div>
+      <input type="radio" name="gender" value="2" class="form-radio">
+      <label for="male">Male</label>
+    </div>
+    <div>
+      <input type="radio" name="gender" value="1" class="form-radio">
+      <label for="female">Female</label>
+    </div>
+    <div>
+      <input type="radio" name="gender" value="3" class="form-radio">
+      <label for="others">Others</label>
+    </div>
   </div>
   
   <input type="hidden" name="csrf_token" value="{{csrf_token()}}">

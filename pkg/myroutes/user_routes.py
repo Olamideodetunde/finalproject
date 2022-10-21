@@ -1,14 +1,25 @@
+import re,os,random,string
 from flask import render_template,request,redirect,url_for,flash,session
 from werkzeug.security import check_password_hash,generate_password_hash
-from pkg.mymodels import Sp,State
+from pkg.mymodels import Sp,State,Service
 from pkg import hireapp,db
 from pkg.forms import Signup,Login,Profile
-@hireapp.route('/')
+@hireapp.route('/',methods=['POST','GET'])
 def home_page():
-  return render_template('user/hire.html')
+  records=db.session.query(State).all()
+  service=db.session.query(Service).all()
+  if request.method =='GET':
+    return render_template('user/hire.html',state=records,service=service)
+  else:
+    sp_name=request.form.get('servprov')
+    services=request.form.get('services')
+    state=request.form.get('state')
+    return redirect(url_for('profile_page'))
 @hireapp.route('/profile')
 def profile_page():
-  return render_template('user/profx.html')
+  records=db.session.query(Sp).all()
+  service=db.session.query(Service).all()
+  return render_template('user/profx.html',records=records,service=service)
 @hireapp.route('/form',methods=['GET','POST'])
 def form_page():
   form=Login()
@@ -77,19 +88,46 @@ def sp_faq():
     return render_template('service_providers/faq.html')
   else:
     return redirect(url_for('form_page'))
+@hireapp.route('/sp_details/<id>')
+def sp_details(id):
+  records=db.session.query(Sp).filter(Sp.sp_id==id)
+  return render_template('user/details.html',records=records)
 @hireapp.route('/sp_profile')
 def sp_profile():
   b=Profile()
   if session.get('loggedin')!=None:
-    records=db.session.query(Sp).filter(Sp.sp_id==session.get('loggedin')).first()
-    deets=db.session.query(Sp).all()
-    fname=b.fname.data
-    lname=b.lname.data
-    phone=b.phone.data
-    service=request.form.get('service')
-    state=request.form.get('state')
-    address=request.form.get('address')
-    return render_template('service_providers/sp_profile.html',b=b,records=records,deets=deets)
+    if request.method == 'GET':
+      records=db.session.query(Sp).filter(Sp.sp_id==session.get('loggedin')).first()
+      service=db.session.query(Service).all()
+      records1=db.session.query(State).all()
+      return render_template('service_providers/sp_profile.html',b=b,records=records,service=service,records1=records1)
+    else:
+      records=db.session.query(Sp).filter(Sp.sp_id==session.get('loggedin')).first()
+      file_obj=request.files['sp_image']
+      allowed=['.jpg','.png','.jpeg']
+      newfilename=''
+      if file_obj.filename!='':
+        original_name=file_obj.filename
+        filename,ext=os.path.splitext(original_name)
+        if ext.lower() in allowed:
+          xter_list=random.sample(string.ascii_letters,12)
+          newfilename=''.join(xter_list)+ext
+          file_obj.save('pkg/static/uploads/'+newfilename)
+      fname=request.form.get('fname')
+      lname=request.form.get('lname')
+      phone=request.form.get('phone')
+      service=request.form.get('service')
+      state=request.form.get('state')
+      address=request.form.get('address')
+      records.sp_fname=fname
+      records.sp_lname=lname
+      records.sp_service=service
+      records.sp_phone=phone
+      records.sp_state=state
+      records.sp_address=address
+      records.sp_image=newfilename
+      db.session.commit()
+      return redirect(url_for('sp_profile'))
   else:
     return redirect(url_for('form_page'))
 @hireapp.route('/sp_logout')

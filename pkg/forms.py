@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField,SubmitField,PasswordField,TextAreaField,RadioField,SelectField
 from wtforms.validators import DataRequired,Length,Email,EqualTo
 class Login(FlaskForm):
-  emailadd=StringField('Email Address',validators=[DataRequired()])
+  emailadd=StringField('Email Address',validators=[DataRequired(),Email()])
   password = PasswordField('Password',validators=[DataRequired(),Length(8,16)])
   submit= SubmitField('Submit')
 
@@ -16,7 +16,7 @@ class Profile(FlaskForm):
 class Signup(FlaskForm):
   fname=StringField('First Name',validators=[DataRequired()])
   lname=StringField('Last Name',validators=[DataRequired()])
-  emailadd=StringField('Email Address',validators=[DataRequired()])
+  emailadd=StringField('Email Address',validators=[DataRequired(),Email()])
   phone=StringField('Phone Number',validators=[DataRequired()])
   password = PasswordField('Password',validators=[DataRequired(),Length(8,16),EqualTo('confirmpwd')])
   confirmpwd = PasswordField('Password',validators=[DataRequired(),Length(8,16),EqualTo('password')])

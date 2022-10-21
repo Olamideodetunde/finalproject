@@ -30,25 +30,20 @@
   <section id="next">
     <div class="container">
       <div class="row" style="justify-content: center;">
-        <div class="col-md-4 p-md-5">
-          <form action="" method="post" style="box-shadow:3px 4px 7px black;" class="col-md-12 bg-white p-3 rounded" id="login" autocomplete="on">
+        <div class="col-4 p-5">
+          <form action="" method="post" style="box-shadow:2px 2px 5px black;" class="col-md-12 bg-white p-3 rounded" id="login" autocomplete="on">
             <h1 class="text-center">Login</h1>
-            {% set message = get_flashed_messages()%}
-            {% if message %}
-            {%for i in message%}
-              <div class="alert alert-danger">{{i}}</div>
-            {%endfor%}
-            {% endif %}
-            <div class="mb-md-3">
+            <div id="message"></div>
+            <div class="mb-3">
               <label for="email" class="form-label">Email Address</label>
               {{form.emailadd(class_='form-control' ,placeholder='Enter Email Address')}}
             </div>
-            <div class="mb-md-3">
+            <div class="mb-3">
               <label for="pwd" class="form-label">Password</label>
               {{form.password(class_='form-control',placeholder='Enter Your Password')}}
             </div>
-            <div class="mb-md-3 offset-3">
-              {{form.submit(class='btn btn-primary col-6')}} 
+            <div class="mb-3 offset-3">
+              {{form.submit(class='btn btn-primary col-6',onclick='validate()')}} 
             </div>
             <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
             <div class="text-center">
@@ -63,15 +58,15 @@
   <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../static/js/jquery.min.js"></script>
   <script>
-    valid=document.getElementsByClassName('user')
-    $(document).ready(function(){
-      $('#btn').click(function(){
-        if (valid.value==''){
-          document.getElementById('errormsg').innerHTML="<p class='alert alert-danger'>Please Fill All Fields</p>"
-        }
-
-      })
-    })
+    function validate(){
+      var email=document.getElementById('emailadd')
+      var password=document.getElementById('password')
+      if (email==''||password==''){
+        document.getElementById('message').innerHTML="<p class='alert alert-danger'>Fill All Fields</p>"
+      }else{
+        document.getElementById('message').innerHTML="<p class='alert alert-success'>Login Succesfully</p>"
+      };
+    };
   </script>
 </body>
 </html>
