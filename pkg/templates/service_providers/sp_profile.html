@@ -1,28 +1,38 @@
 {% extends 'service_providers/layout.html'%}
 {% block content%}
-<form action="" method="post" class="p-md-5" enctype="multipart/form-data">
+<form action="" method="post" class="p-md-5" id="formdeets" enctype="multipart/form-data">
+  <h1 class="text-center" style="font-family: Unna,Serif;">Update Profile</h1>
+  {% set message = get_flashed_messages()%}
+  {%if message%}
+  <div class="alert alert-danger">{{message}}</div>
+  {%endif%}
+  <input type="image" src="/static/uploads/{{records.sp_image}}" width="200" height="200"  alt="profile image">
   <div class="mb-3">
     <label for="">Upload Profile Photo</label>
-    <input type="file" name="file" class="form-control">
+    {{b.image(class_='form-control',value=records.sp_image)}}
   </div>
   <div class="mb-3">
     <label for="">Firstname</label>
-    <input type="text" value="{{records.sp_fname}}" name="fname" placeholder="Enter Your Firstname" class="form-control">
+    {{b.fname(class_='form-control',placeholder='Enter Your First Name',value=records.sp_fname)}}
   </div>
   <div class="mb-3">
     <label for="">Lastname</label>
-    <input type="text" name="lname" value="{{records.sp_lname}}" placeholder="Enter Your Lastname" class="form-control">
+    {{b.lname(class_='form-control',placeholder='Enter Your Last Name',value=records.sp_lname)}}
   </div>
   <div class="mb-3">
     <label for="">Phone Number</label>
-    <input type="text" name="phone" value="{{records.sp_phone}}" placeholder="Enter Your Phone Number" class="form-control">
+    {{b.phone(class_='form-control',placeholder='Enter Your Address',value=records.sp_phone)}}
+  </div>
+  <div class="mb-3">
+    <label for="">Summary</label>
+    <textarea name="summary"  placeholder="Enter Your Summary" class="form-control">{{records.sp_summary}}</textarea>
   </div>
   <div class="mb-3">
     <label for="">Address</label>
-    <textarea name="lname"  placeholder="Enter Your Address" class="form-control">{{records.sp_address}}</textarea>
+    <textarea name="address"  placeholder="Enter Your Address" class="form-control">{{records.sp_address}}</textarea>
   </div>
   <div class="mb-3">
-    <select name="service" id="" class="form-select">
+    <select name="service" id="" class="form-select" required>
       <option value="">Select Your Service</option>
       {% for u in service%}
         <option value="{{u.service_id}}">{{u.service_name}}</option>
@@ -30,30 +40,23 @@
     </select>
   </div>
   <div class="mb-3">
-    <select name="state" id="" class="form-select">
+    <select name="state" id="" class="form-select" required>
       <option value="">Select Your State</option>
       {% for i in records1%}
+      {%if i.stateid == records.sp_location%}
+        <option value="{{i.state_id}}" selected>{{i.state_name}}</option>
+      {%else%}
         <option value="{{i.state_id}}">{{i.state_name}}</option>
+      {%endif%}
       {% endfor %}
     </select>
-  </div>
-  <div class="mb-3">
-    <div>
-      <input type="radio" name="gender" value="2" class="form-radio">
-      <label for="male">Male</label>
-    </div>
-    <div>
-      <input type="radio" name="gender" value="1" class="form-radio">
-      <label for="female">Female</label>
-    </div>
-    <div>
-      <input type="radio" name="gender" value="3" class="form-radio">
-      <label for="others">Others</label>
-    </div>
-  </div>
-  
+  </div> 
   <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
   <div>
     {{b.submit(class_='btn btn-primary')}}
 </form>
 {% endblock %}
+{%block customjs%}
+<script>
+</script>
+{%endblock%}

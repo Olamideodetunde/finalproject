@@ -1,22 +1,39 @@
 {% extends 'service_providers/layout.html'%}
 {% block content%}
 <div class="col-md-5 m-2 ">
-  <form action="" class="bg-white p-3" style="box-shadow: 2px 2px 5px;">
+  <form action="" method="post" class="bg-white p-3" style="box-shadow: 2px 2px 5px;" id="myform">
     <h2 style="font-family:'Unna', serif;" class="title">Ask a Question</h2>
-    <div class="mb-3">
-      <input type="text" required name="fname" class="form-control" placeholder="Enter Your name">
+    <div id="successmsg"></div>
+    <div>
+      <label class="form-label">Enter Your Message Title</label>
+      {{message.title(class_="form-control", placeholder="Enter Message Title")}}
     </div>
     <div class="mb-3">
-      <input type="text " required name="email" class="form-control" placeholder="Enter Your Email">
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Enter Your Question</label>
-      <textarea class="form-control" required name="question" id="" cols="30" rows="10"></textarea>
+      <label class="form-label">Enter Your Message</label>
+      {{message.message( class_="form-control", cols="30", rows="10")}}
     </div>
     <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
     <div>
-      <button class="btn btn-danger">Send</button>
+      <button class="btn btn-danger" id="btn">Send</button>
     </div>
   </form>
 </div>
 {% endblock %}
+{%block customjs%}
+<script>
+  $(document).ready(function(){
+    $('#btn').click(function(){
+      var data2send=$('#myform').serialize()
+      $.ajax({
+        url:"{{url_for('sp_message')}}",
+        data:data2send,
+        type:'post',
+        dataType:'text',
+        success:function(response){
+          $('#successmsg').html("<p class='alert alert-success'>"+response+"</p>")
+        }
+      })
+    })
+  })
+</script>
+{%endblock%}

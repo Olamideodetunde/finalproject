@@ -41,10 +41,25 @@
       </div>
   </nav>
   <section>
-    <div class="container-fluid">
+    <div class="container-fluid bg-white" style="box-shadow: 1px 1px 3px;">
+      <div class="row">
+        <div class="col-md-2">
+          <img src="../../static/uploads/{{records.sp_image}}" class="img-fluid" alt="profile image" width="200" height="200">
+          <h4>{{records.sp_fname}} {{records.sp_lname}}</h4>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-12">
-          
+          <p>
+            <b>Professional Summary:</b>{{records.sp_summary}}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p>
+            <b>Professional Location:</b>{{records.statedeets.sp_location}}
+          </p>
         </div>
       </div>
     </div>

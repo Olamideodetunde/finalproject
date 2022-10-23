@@ -63,6 +63,7 @@ class Sp(db.Model):
     sp_password = db.Column(db.String(255), nullable=False)
     sp_fname = db.Column(db.String(255), nullable=False)
     sp_lname = db.Column(db.String(255), nullable=False)
+    sp_summary = db.Column(db.String(255), nullable=True)
     sp_image = db.Column(db.String(255), nullable=True)
     sp_location = db.Column(db.Integer(),db.ForeignKey('state.state_id'), nullable=False)
     sp_phone = db.Column(db.String(100), nullable=True)
@@ -73,3 +74,10 @@ class Sp(db.Model):
     servicedeets=db.relationship('Service',backref='spserv')
     statedeets=db.relationship('State',backref='spstate')
     genderdeets=db.relationship('Gender',backref='spgender')
+class Message(db.Model): 
+    message_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
+    message_content = db.Column(db.String(255), nullable=False)
+    message_title=db.Column(db.String(255),nullable=False)
+    message_by = db.Column(db.Integer(),db.ForeignKey('service_providers.sp_id'), nullable=False)
+    message_date=db.Column(db.DateTime(), default=datetime.datetime.utcnow())
+    userdeets=db.relationship('Sp',backref='comments')
