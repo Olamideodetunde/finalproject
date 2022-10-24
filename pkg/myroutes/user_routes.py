@@ -1,5 +1,4 @@
 import re,os,random,string
-from turtle import title
 from flask import render_template,request,redirect,url_for,flash,session,jsonify
 from werkzeug.security import check_password_hash,generate_password_hash
 from pkg.mymodels import Sp,State,Service,Message
@@ -90,7 +89,9 @@ def sp_message():
       rec=Message(message_title=title,message_content=content,message_by=session.get('loggedin'))
       db.session.add(rec)
       db.session.commit()
-      return 'Your message has been received. We will get back to you in due time'
+      rsp='Your message has been received. We will get back to you in due time'
+      data2send=jsonify(rsp)
+      return data2send
   else:
     return redirect(url_for('form_page'))
 @hireapp.route('/sp_faq')

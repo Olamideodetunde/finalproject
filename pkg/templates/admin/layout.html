@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../../static/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" href="../../static/css/animate.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unna:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../static/css/hire.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-3 sidemenu">
+          <div class="nav_gation">
+            <p class="text-center h1 text-primary my-4 animate__animated animate__pulse animate__infinite">
+              <b>HIRE</b></a>
+            </p>
+            <div>
+              <ul>
+                <li class="links text p-2">
+                    <a href="{{url_for('sp_dashboard')}}">
+                      <i class="fa-solid fa-home text-white"></i>
+                      <span>Home</span>
+                    </a>
+                </li>
+                <li class="links text p-2">
+                  <a href="{{url_for('sp_payment')}}">
+                    <i class="fas fa-wallet    "></i>
+                    <span>All Payments</span>
+                  </a>
+                </li>
+                <li class="links text p-2">
+                  <a href="{{url_for('sp_profile')}}">
+                    <i class="fa fa-sticky-note" aria-hidden="true"></i>
+                    <span>All Service Providers</span>
+                  </a>
+                </li>
+                <li class="links text p-2">
+                  <a href="#">
+                    <i class="fa fa-bell" aria-hidden="true"></i>
+                    <span>All messages</span>
+                  </a>
+                </li>
+                <li class="log_out text p-2">
+                  <a href="{{url_for('sp_logout')}}">
+                    <i class="fa-solid fa-right-from-bracket text-white"></i>
+                    <span>Log Out</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-9">
+          <div class="row bg-primary p-2">
+            <nav class="d-flex">
+              <div class="mx-2 col-1">
+                <i class="fa-solid fa-bars fa-2x"></i>
+              </div>
+              <div class="mx-2 col-2">
+                <p class="h4 title2">
+                  {%block name%}
+                  {%endblock%}
+                </p>
+              </div>
+              <div class="mx-2 col-6">
+                <form action="" method="get" class=" d-flex">
+                  <div class="col-10 mx-2">
+                    <input type="search" class="form-control" >
+                  </div>
+                  <button type="submit" class="btn btn-success">Search</button>
+                </form>
+              </div>
+              <div class="border rounded-pill d-flex p-2 text">
+                <div class="rounded-pill bg-white text-center" style="width: 30px;height:30px;">
+                  <i class="fa-solid fa-user"></i>
+                </div>
+                <span>
+                  {% block email %}
+                  {% endblock %}
+                </span>
+              </div>
+            </nav>
+          </div>
+          <div class="row">
+            <div class="col-md-12 " style="justify-content: center;">
+              {%block content%}
+              {% endblock %}
+            </div>
+          </div>
+        </div>
+          
+    </div>
+  </div>
+  <script src="../../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../../static/js/jquery.min.js"></script>
+  {%block customjs%}
+  {%endblock%}
+</body>
+</html>

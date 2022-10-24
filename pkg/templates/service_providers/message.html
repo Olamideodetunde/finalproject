@@ -28,7 +28,7 @@
         url:"{{url_for('sp_message')}}",
         data:data2send,
         type:'post',
-        dataType:'text',
+        dataType:'json',
         success:function(response){
           $('#successmsg').html("<p class='alert alert-success'>"+response+"</p>")
         }

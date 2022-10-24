@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hire-Login Form</title>
+  <link rel="stylesheet" href="../static/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" href="../static/css/animate.min.css">
+  <link rel="stylesheet" href="../static/css/hire.css">
+</head>
+<body style="background-color: #EFFFFA;">
+  <nav class="sticky-top">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <nav class="navbar navbar-expand-lg " style="background-color: #EFFFFA;">
+            <div class="container-fluid">
+            <a class="navbar-brand animate__animated animate__pulse animate__infinite" id="hire" href="{{url_for('home_page')}}"><b>HIRE</b></a>
+              <div class="d-inline-block">
+                <span class="text">Are a New User?</span>
+                <a href="{{url_for('signup_page')}}" class="btn btn-outline-dark">Sign up</a>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+  </nav>
+  <section id="next">
+    <div class="container">
+      <div class="row" style="justify-content: center;">
+        <div class="col-4 p-5">
+          <form action="" method="post" style="box-shadow:2px 2px 5px black;" class="col-md-12 bg-white p-3 rounded" id="login" autocomplete="on">
+            <h1 class="text-center">Login</h1>
+            <div id="message"></div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              {{form.emailadd(class_='form-control' ,placeholder='Enter Email Address')}}
+            </div>
+            <div class="mb-3">
+              <label for="pwd" class="form-label">Password</label>
+              {{form.password(class_='form-control',placeholder='Enter Your Password')}}
+            </div>
+            <div class="mb-3 offset-3">
+              {{form.submit(class='btn btn-primary col-6',onclick='validate()')}} 
+            </div>
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+            <div class="text-center">
+              <p><hr></p>
+              <a href="{{url_for('signup_page')}}" class="text-decoration-none" id="showSignUp" style="cursor: pointer;" role="link"><b>New User?</b></a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../static/js/jquery.min.js"></script>
+  <script>
+    function validate(){
+      var email=document.getElementById('emailadd')
+      var password=document.getElementById('password')
+      if (email==''||password==''){
+        document.getElementById('message').innerHTML="<p class='alert alert-danger'>Fill All Fields</p>"
+      }else{
+        document.getElementById('message').innerHTML="<p class='alert alert-success'>Login Succesfully</p>"
+      };
+    };
+  </script>
+</body>
+</html>

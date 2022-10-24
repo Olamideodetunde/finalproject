@@ -6,6 +6,11 @@ class Login(FlaskForm):
   password = PasswordField('Password',validators=[DataRequired(),Length(8,16)])
   submit= SubmitField('Submit')
 
+class AdminForm(FlaskForm):
+  emailadd=StringField('Email Address',validators=[DataRequired(),Email()])
+  password = PasswordField('Password',validators=[DataRequired(),Length(8,16)])
+  submit= SubmitField('Submit')
+
 class Profile(FlaskForm):
   fname=StringField('First Name',validators=[DataRequired()])
   image=FileField('Profile Image',validators=[DataRequired()])

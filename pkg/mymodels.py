@@ -16,6 +16,11 @@ class Service(db.Model):
     __tablename__='service'
     service_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
     service_name = db.Column(db.String(255), nullable=False)
+class Admin(db.Model): 
+    __tablename__='admin'
+    admin_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
+    admin_email = db.Column(db.String(255), nullable=False)
+    admin_password = db.Column(db.String(255), nullable=False)
 
 class Provider(db.Model): 
     __tablename__='provider_services'

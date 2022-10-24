@@ -2,10 +2,6 @@
 {% block content%}
 <form action="" method="post" class="p-md-5" id="formdeets" enctype="multipart/form-data">
   <h1 class="text-center" style="font-family: Unna,Serif;">Update Profile</h1>
-  {% set message = get_flashed_messages()%}
-  {%if message%}
-  <div class="alert alert-danger">{{message}}</div>
-  {%endif%}
   <input type="image" src="/static/uploads/{{records.sp_image}}" width="200" height="200"  alt="profile image">
   <div class="mb-3">
     <label for="">Upload Profile Photo</label>
