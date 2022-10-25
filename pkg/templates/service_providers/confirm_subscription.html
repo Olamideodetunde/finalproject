@@ -1,0 +1,31 @@
+{%extends 'service_providers/layout.html'%}
+{%block content%}
+<div class="container">
+  <div class="row">
+      <div class="col">
+          <form method="post" action="/paystack_step1"> 
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+          <table class="table table-striped">
+            <tr> 
+              <th>S/N</th>
+              <th>Name</th>
+              <th>Price</th>
+            </tr>
+            {%for i in data%}
+            <tr> 
+              <td>S/N</td>
+              <td>Name</td>
+              <td>Price</td>
+            </tr>
+            {%endfor%}
+            <tr>
+              <td>TOTAL</td>
+              <td colspan="2">{{ total|sum() }}</td>
+            </tr>
+          </table>
+          <button class="btn btn-primary">Confirm</button>
+        </form>
+      </div>
+  </div>
+</div>
+{%endblock%}

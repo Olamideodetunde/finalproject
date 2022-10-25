@@ -59,8 +59,8 @@
   <script src="../static/js/jquery.min.js"></script>
   <script>
     function validate(){
-      var email=document.getElementById('emailadd')
-      var password=document.getElementById('password')
+      var email=document.getElementById('emailadd').value
+      var password=document.getElementById('password').value
       if (email==''||password==''){
         document.getElementById('message').innerHTML="<p class='alert alert-danger'>Fill All Fields</p>"
       }else{

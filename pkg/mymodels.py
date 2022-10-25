@@ -21,45 +21,27 @@ class Admin(db.Model):
     admin_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
     admin_email = db.Column(db.String(255), nullable=False)
     admin_password = db.Column(db.String(255), nullable=False)
-
-class Provider(db.Model): 
-    __tablename__='provider_services'
-    provider_service_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
-    sp_id = db.Column(db.Integer(),db.ForeignKey('service_providers.sp_id'))
-    service_id = db.Column(db.Integer(),db.ForeignKey('service.service_id'))
-    spdeets=db.relationship('Sp',backref='provserv')
-    servicedeets=db.relationship('Service',backref='provserv')
-class User(db.Model): 
-    __tablename__='user'
-    user_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
-    user_email = db.Column(db.String(255), nullable=False)
-    user_password = db.Column(db.String(255), nullable=False)
-    user_fname = db.Column(db.String(255), nullable=False)
-    user_lname = db.Column(db.String(255), nullable=False)
-    user_state = db.Column(db.Integer(),db.ForeignKey('state.state_id'))
-    user_address = db.Column(db.String(255), nullable=True)
-    user_gender = db.Column(db.Integer(),db.ForeignKey('gender.gender_id'), nullable=False)
-    user_phone = db.Column(db.String(100), nullable=True)
-    user_reg = db.Column(db.DateTime(), default=datetime.datetime.utcnow())
-    statedeets=db.relationship('State',backref='users')
-    genderdeets=db.relationship('Gender',backref='users')
+class Transaction(db.Model):
+    trx_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
+    trx_user = db.Column(db.Integer(),db.ForeignKey('service_providers.sp_id'), nullable=False)
+    trx_refno= db.Column(db.String(255), nullable=True)
+    trx_totalamt = db.Column(db.Float(), nullable=True)
+    trx_status = db.Column(db.Enum('pending','paid','failed'), nullable=True)
+    trx_method=db.Column(db.Enum('card','cash'), nullable=True)
+    trx_paygate=db.Column(db.Text(), nullable=True)
+    trx_date=db.Column(db.DateTime(), default=datetime.datetime.utcnow())
+    user_whopaid=db.relationship('Sp',backref='mytrxs')
 class Subscription(db.Model):
     __tablename__='subscription' 
     subscription_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
-    sp_id = db.Column(db.Integer(),db.ForeignKey('service_providers.sp_id'))
     subscription_amount = db.Column(db.Float(), nullable=False)
-    subscription_date = db.Column(db.DateTime(), default=datetime.datetime.utcnow())
-    date_of_expiry = db.Column(db.DateTime(), default=datetime.datetime.utcnow())
-    subscription_discount = db.Column(db.Float(), nullable=False)
-    spdeets=db.relationship('Sp',backref='subscribe')
 class Payment(db.Model):
     __tablename__='payment' 
     payment_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
     subscription_id = db.Column(db.Integer(),db.ForeignKey('subscription.subscription_id'))
     sp_id = db.Column(db.Integer(),db.ForeignKey('service_providers.sp_id'))
-    amt_paid = db.Column(db.Float(), nullable=False)
-    date_paid = db.Column(db.DateTime(), default=datetime.datetime.utcnow())
     spdeets=db.relationship('Sp',backref='payment')
+    subdeets=db.relationship('Subscription',backref='paymentdeets')
 
 class Sp(db.Model):
     __tablename__='service_providers' 
@@ -79,6 +61,10 @@ class Sp(db.Model):
     servicedeets=db.relationship('Service',backref='spserv')
     statedeets=db.relationship('State',backref='spstate')
     genderdeets=db.relationship('Gender',backref='spgender')
+class Homesearch(db.Model): 
+    search_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
+    search_state=db.Column(db.Integer(),db.ForeignKey('state.state_id'), nullable=True)
+    search_service=db.Column(db.Integer(),db.ForeignKey('service.service_id'), nullable=True)
 class Message(db.Model): 
     message_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
     message_content = db.Column(db.String(255), nullable=False)

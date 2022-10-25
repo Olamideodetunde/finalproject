@@ -31,7 +31,11 @@
     <select name="service" id="" class="form-select" required>
       <option value="">Select Your Service</option>
       {% for u in service%}
+      {%if u.service_id == records.sp_services%}
+        <option value="{{u.service_id}}" selected>{{u.service_name}}</option>
+      {%else%}
         <option value="{{u.service_id}}">{{u.service_name}}</option>
+      {%endif%}
       {% endfor %}
     </select>
   </div>
@@ -39,7 +43,7 @@
     <select name="state" id="" class="form-select" required>
       <option value="">Select Your State</option>
       {% for i in records1%}
-      {%if i.stateid == records.sp_location%}
+      {%if i.state_id == records.sp_location%}
         <option value="{{i.state_id}}" selected>{{i.state_name}}</option>
       {%else%}
         <option value="{{i.state_id}}">{{i.state_name}}</option>

@@ -20,13 +20,8 @@
                 <input class="form-control" required id="email" name="sp_email" placeholder="Enter your Last name">
               </div>
               <div class="mb-3">
-                <label for="sp_type" class="form-label">Subscription Type</label>
-                <select class="form-select" required name="sp_type" id="sp_type">
-                  <option value="">Select Subscription Type</option>
-                  <option value="silver">Silver</option>
-                  <option value="gold">Gold</option>
-                  <option value="platinum">Platinum</option>
-                </select>
+                <label for="sp_type" class="form-label">Subscription Price</label>
+                <span>{{sub.subscription_amount}}</span>
               </div>
               <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
               <div>

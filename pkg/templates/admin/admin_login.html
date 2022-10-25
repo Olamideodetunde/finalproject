@@ -18,10 +18,6 @@
           <nav class="navbar navbar-expand-lg " style="background-color: #EFFFFA;">
             <div class="container-fluid">
             <a class="navbar-brand animate__animated animate__pulse animate__infinite" id="hire" href="{{url_for('home_page')}}"><b>HIRE</b></a>
-              <div class="d-inline-block">
-                <span class="text">Are a New User?</span>
-                <a href="{{url_for('signup_page')}}" class="btn btn-outline-dark">Sign up</a>
-              </div>
             </div>
           </nav>
         </div>
@@ -46,10 +42,6 @@
               {{form.submit(class='btn btn-primary col-6',onclick='validate()')}} 
             </div>
             <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
-            <div class="text-center">
-              <p><hr></p>
-              <a href="{{url_for('signup_page')}}" class="text-decoration-none" id="showSignUp" style="cursor: pointer;" role="link"><b>New User?</b></a>
-            </div>
           </form>
         </div>
       </div>
@@ -59,8 +51,8 @@
   <script src="../static/js/jquery.min.js"></script>
   <script>
     function validate(){
-      var email=document.getElementById('emailadd')
-      var password=document.getElementById('password')
+      var email=document.getElementById('emailadd').value
+      var password=document.getElementById('password').value
       if (email==''||password==''){
         document.getElementById('message').innerHTML="<p class='alert alert-danger'>Fill All Fields</p>"
       }else{

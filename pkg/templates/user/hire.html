@@ -83,30 +83,29 @@
       <div class="row d-flex p-4 bg-dark m-2" style="box-shadow: 1px 1px 5px;">
         <form action="" method="post">
           <div class="row">
-            <div class="col-5">
-              <input class="form-control search_bar" type="search" name="servprov" placeholder="Search Name Here">
-            </div>
-            <div class="col-2">
-              <select name="services" class="form-select search_bar">
+            <div class="col-4">
+              <select name="services" id="service" class="form-select search_bar">
                 <option value="">Filter Services</option>
                 {% for u in service%}
                   <option value="{{u.service_id}}">{{u.service_name}}</option>
                 {%endfor%}
               </select>
             </div>
-            <div class="col-2">
-              <select name="state" class="form-select search_bar">
+            <div class="col-4">
+              <select name="state" id="state" class="form-select search_bar">
                 <option value="">Filter Location</option>
                 {% for i in state%}
                   <option value="{{i.state_id}}">{{i.state_name}}</option>
                 {%endfor%}
               </select>
             </div>
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
             <div class="col-2">
-              <button class="btn col-12 btn-primary search_bar" type="button">Search</button>
+              <button class="btn col-12 btn-primary search_bar" id="btn" onclick="validate()" type="submit">Search</button>
             </div>
           </div>
         </form>
+        <div id="errormsg"></div>
       </div>
     </div>
   </section>
@@ -115,7 +114,7 @@
       <div class="row" style="justify-content: center;">
         <div class="col-md-11">
           <div class="bg-img col-md-12">
-            <div class="overlay col-md-4  text-white p-2" style="justify-content: center; align-self: center;">
+            <div class="overlay col-md-12  text-white p-2" style="align-items: center;">
               <div>
                 <h3 class="text-center title2" style="font-family: Unna,Serif;">Hire is the place for You</h3>
                 <p class="text-center text">Join us today</p>
@@ -172,11 +171,11 @@
         </div>
         <div class="col-md-3 p-5 m-3 bg-white transformer" style="box-shadow:3px 4px 7px ;">
           <p class="text-center"><img src="../static/images/quality.png" class="img-fluid"></p>
-          <h3 class="text-center title2" style="font-family: Unna,Serif;">HIGHEST QUALITY</h3>
+          <h4 class="text-center title2" style="font-family: Unna,Serif;">HIGHEST QUALITY</h4>
         </div>
         <div class="col-md-3 p-5 m-3 bg-white rounded transformer" style="box-shadow:3px 4px 7px ;">
           <p class="text-center"><img src="../static/images/list.png" class="img-fluid" alt="value3"></p>
-          <h3 class="text-center title2" style="font-family: Unna,Serif;">ACCOUNTABLITY</h3>
+          <h4 class="text-center title2" style="font-family: Unna,Serif;">ACCOUNTABLITY</h4>
         </div>
       </div>
     </div>
@@ -242,6 +241,17 @@
   <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../static/js/jquery.min.js"></script>
   <script>
+    function validate(){
+      var y =document.getElementById('service').value
+      var b=document.getElementById('state').value
+      if(b==''||y==''){
+        document.getElementById('errormsg').innerHTML ="<p class='text-danger'>Plese you have to select a value if you want to search</p>"
+        document.getElementById('btn').type='button'
+      }else{
+        document.getElementById('btn').type='submit'
+      }
+
+    }
   </script>
 </body>
 </html>

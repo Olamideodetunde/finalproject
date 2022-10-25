@@ -17,7 +17,7 @@ class Profile(FlaskForm):
   lname=StringField('Last Name',validators=[DataRequired()])
   phone=StringField('Phone Number',validators=[DataRequired()])
   address = TextAreaField('Enter Your Address',validators=[DataRequired()])
-  summary = TextAreaField('Enter Your Address',validators=[DataRequired()])
+  summary = TextAreaField('Enter Your Address',validators=[DataRequired(),Length(55,255)])
   submit= SubmitField('Save')
 class MessageForm(FlaskForm):
   title=StringField('First Name',validators=[DataRequired()])

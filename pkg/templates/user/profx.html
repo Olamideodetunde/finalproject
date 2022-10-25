@@ -43,29 +43,40 @@
   <section>
     <div class="container-fluid">
       <div class="row d-flex p-4 bg-white" style="box-shadow: 1px 1px 5px;">
-        <form action="" method="get">
+        <div style="display: none;">
+        {%set searchval=[]%}
+        {%for i in search%}
+          {{searchval.append(i)}}
+        {%endfor%}
+      </div>
+        <form action="" method="post" id="form">
           <div class="row">
-            <div class="col-5">
-              <input class="form-control search_bar" type="search" name="servprov" placeholder="Search Name Here">
-            </div>
-            <div class="col-2">
+            <div class="col-4">
               <select name="services" class="form-select search_bar">
                 <option value="">Filter Services</option>
                 {% for u in service%}
+                {%if searchval[0].search_service==u.service_id%}
+                  <option value="{{u.service_id}}" selected>{{u.service_name}}</option>
+                {%else%}
                   <option value="{{u.service_id}}">{{u.service_name}}</option>
+                {%endif%}
                 {%endfor%}
               </select>
             </div>
-            <div class="col-2">
+            <div class="col-4">
               <select name="state" class="form-select search_bar">
                 <option value="">Filter Location</option>
                 {% for y in state%}
-                  <option value="{{y.state_id}}">{{y.state_name}}</option>
+                {%if searchval[0].search_state==y.state_id%}
+                  <option value="{{y.state_id}}" selected>{{y.state_name}}</option>
+                {%else%}
+                  <option value="{{y.state_id}}" >{{y.state_name}}</option>
+                {%endif%}
                 {%endfor%}
               </select>
             </div>
             <div class="col-2">
-              <button class="btn col-12 btn-primary search_bar" type="button">Search</button>
+              <button class="btn col-12 btn-primary search_bar" type="button" id="btn">Search</button>
             </div>
           </div>
         </form>
@@ -80,7 +91,11 @@
         <div class="col-md-11 m-3">
           <div>
             <div>
+              {%if i.sp_image ==None%}
               <img src="../static/images/profile11.jpg" class="img-fluid m-3 rounded-pill" style="width:3.906vw;">
+              {%else%}
+              <img src="/static/uploads/{{i.sp_image}}" class="img-fluid m-3 rounded-pill" style="width:3.906vw;">
+              {%endif%}
               <span class="text-center"><a href="/sp_details/{{i.sp_id}}" class=" h4 text-decoration-none text-primary title2" style="font-family: 'Unna', serif;">{{i.sp_fname}} {{i.sp_lname}}</a></span>
             </div>
             <div class="d-flex">
@@ -147,5 +162,19 @@
   </footer>
   <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../static/js/jquery.min.js"></script>
+  <script>
+    $(document).ready(function(){
+    $('#btn').click(function(){
+      var data=$('#form').serialize()
+    $.ajax({
+        url:"{{url_for('profile_page')}}",
+        data:data,
+        type:'post',
+        dataType:'json',
+        
+      })
+    })
+    })
+  </script>
 </body>
 </html>

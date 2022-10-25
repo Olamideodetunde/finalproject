@@ -1,7 +1,7 @@
 import re,os,random,string
 from flask import render_template,request,redirect,url_for,flash,session,jsonify
 from werkzeug.security import check_password_hash,generate_password_hash
-from pkg.mymodels import Sp,State,Service,Message
+from pkg.mymodels import Sp,State,Service,Message,Homesearch, Subscription,Transaction
 from pkg import hireapp,db
 from pkg.forms import MessageForm, Signup,Login,Profile
 @hireapp.route('/',methods=['POST','GET'])
@@ -11,16 +11,27 @@ def home_page():
   if request.method =='GET':
     return render_template('user/hire.html',state=records,service=service)
   else:
-    sp_name=request.form.get('servprov')
     services=request.form.get('services')
     state=request.form.get('state')
+    records =Homesearch(search_service=services,search_state=state)
+    db.session.add(records)
+    db.session.commit()
+    session['search']=records.search_id
     return redirect(url_for('profile_page'))
-@hireapp.route('/profile')
+@hireapp.route('/profile',methods=['GET','POST'])
 def profile_page():
-  records=db.session.query(Sp).all()
-  service=db.session.query(Service).all()
-  state=db.session.query(State).all()
-  return render_template('user/profx.html',records=records,service=service,state=state)
+  if request.method=='GET':
+    records=db.session.query(Sp).all()
+    service=db.session.query(Service).all()
+    state=db.session.query(State).all()
+    search=db.session.query(Homesearch).filter(Homesearch.search_id==session.get('search')).all()
+    return render_template('user/profx.html',records=records,service=service,state=state,search=search)
+  else:
+    service=request.form.get('service')
+    state=request.form.get('state')
+    records=db.session.query(Sp).filter(Sp.sp_location==state or Sp.sp_services==service)
+    data2send=jsonify(records)
+    return data2send
 @hireapp.route('/form',methods=['GET','POST'])
 def form_page():
   form=Login()
@@ -32,7 +43,7 @@ def form_page():
     records=db.session.query(Sp).filter(Sp.sp_email==emailadd).first()
     if records and check_password_hash(records.sp_password,passwd):
       session['loggedin']=records.sp_id
-      return redirect(url_for('sp_dashboard'))
+      return redirect(url_for('sp_profile'))
     else:
       flash('Wrong Credentials')
       return redirect(url_for('form_page'))
@@ -40,8 +51,9 @@ def form_page():
 def signup_page():
   y=Signup()
   state=State.query.all()
+  service=Service.query.all()
   if request.method == 'GET':
-    return render_template('user/signup.html',y=y,state=state)
+    return render_template('user/signup.html',y=y,state=state,service=service)
   else:
     fname=y.fname.data
     lname=y.lname.data
@@ -49,16 +61,46 @@ def signup_page():
     phone=y.phone.data
     pwd=generate_password_hash(y.password.data)
     addresss=y.address.data
+    service=request.form.get('service')
     gender=request.form.get('gender')
     location=request.form.get('state')
-    b=Sp(sp_email=emailadd,sp_password=pwd,sp_fname=fname,sp_lname=lname,sp_location=location,sp_phone=phone,sp_address=addresss,sp_gender=gender)
+    b=Sp(sp_email=emailadd,sp_password=pwd,sp_fname=fname,sp_lname=lname,sp_location=location,sp_phone=phone,sp_address=addresss,sp_gender=gender,sp_services=service)
     db.session.add(b)
     db.session.commit()
     return redirect(url_for('form_page'))
 @hireapp.route('/sp_payment')
 def sp_payment():
   if session.get('loggedin') != None:
-    return render_template('service_providers/payment.html')
+    if request.method=='GET':
+     return render_template('service_providers/payment.html')
+    else:
+            '''Retrieve form data, and insert into purchases table'''
+            userid = session.get('loggedin')
+            
+            '''Generate a transation ref no and keep it in a session variable'''
+            refno = int(random.random() * 1000000000)
+            session['tref'] = refno
+
+            '''Insert into Transaction Table'''
+            trans = Transaction(trx_user=userid,trx_refno=refno,trx_status='pending',trx_method='cash')            
+            db.session.add(trans) 
+            db.session.commit()
+            '''Get the id from transaction table and insert into purchases table'''
+            id = trans.trx_id
+           
+            productid = request.form.getlist('productid') #[1,2,3]
+            total_amt = 0
+            for p in productid:
+                pobj = Subscription(pur_userid=userid,pur_productid=p,pur_trxid=id)
+                db.session.add(pobj)
+                db.session.commit() 
+
+            '''UPDATE the total amount on transaction table with product_amt'''
+
+            trans.trx_totalamt = total_amt
+            db.session.commit()
+           
+            return redirect('/confirm') 
   else:
     return redirect(url_for('form_page'))
 @hireapp.route('/sp_subscription')
