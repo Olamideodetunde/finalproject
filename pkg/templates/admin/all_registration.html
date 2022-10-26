@@ -24,19 +24,19 @@ admin@hire.com
     {% if regs%}
     {%for i,y in regs%}
     <tr>
-      <td>
+      <td class="text">
         {{loop.index}}
       </td>
-      <td>
+      <td class="text">
         {{i.sp_fname}} {{i.sp_lname}}
       </td>
-      <td>
+      <td class="text">
         {{y.state_name}}
       </td>
-      <td>
+      <td class="text">
         {{i.sp_email}}
       </td>
-      <td>
+      <td class="text">
         <a href="/admin/details/{{i.sp_id}}">Details|</a>
         <a href="/admin/delete/{{i.sp_id}}" onclick="return confirm('Are You Sure You Want to Delete This User?')">Delete User</a>
       </td>

@@ -122,18 +122,21 @@ def sp_dashboard():
 @hireapp.route('/sp_message',methods=['POST','GET'])
 def sp_message():
   if session.get('loggedin')!=None:
-    if request.method=='GET':
       x=MessageForm()
       return render_template('service_providers/message.html',message=x)
-    else:
-      title=request.form.get('title')
-      content=request.form.get('message')
-      rec=Message(message_title=title,message_content=content,message_by=session.get('loggedin'))
-      db.session.add(rec)
-      db.session.commit()
-      rsp='Your message has been received. We will get back to you in due time'
-      data2send=jsonify(rsp)
-      return data2send
+  else:
+    return redirect(url_for('form_page'))
+@hireapp.route('/sp_messageget',methods=['GET','POST'])
+def sp_messageget():
+  if session.get('loggedin')!=None:
+    title=request.form.get('title')
+    content=request.form.get('message')
+    rec=Message(message_title=title,message_content=content,message_by=session.get('loggedin'))
+    db.session.add(rec)
+    db.session.commit()
+    rsp='Your message has been received. We will get back to you in due time'
+    data2send=jsonify(rsp)
+    return data2send
   else:
     return redirect(url_for('form_page'))
 @hireapp.route('/sp_faq')
@@ -175,19 +178,16 @@ def sp_profile():
       state=request.form.get('state')
       address=request.form.get('address')
       summary=request.form.get('summary')
-      if fname == '' or lname=='' or phone=='' or service==''or state==''or address==''or summary=='': 
-        records.sp_fname=fname
-        records.sp_lname=lname
-        records.sp_summary=summary
-        records.sp_services=service
-        records.sp_phone=phone
-        records.sp_location=state
-        records.sp_address=address
-        records.sp_image=newfilename
-        db.session.commit()
-        return redirect(url_for('sp_profile'))
-      else:
-        return redirect(url_for('sp_profile'))
+      records.sp_fname=fname
+      records.sp_lname=lname
+      records.sp_summary=summary
+      records.sp_services=service
+      records.sp_phone=phone
+      records.sp_location=state
+      records.sp_address=address
+      records.sp_image=newfilename
+      db.session.commit()
+      return redirect(url_for('sp_profile'))
   else:
     return redirect(url_for('form_page'))
 @hireapp.route('/sp_logout')

@@ -1,4 +1,4 @@
-{%extends 'admin/layout.html'%}
+{% extends 'admin/layout.html'%}
 {%block email%}
 admin@hire.com
 {%endblock%}
@@ -9,29 +9,17 @@ admin@hire.com
         S/N
       </th>
       <th>
-        Fullname
-      </th>
-      <th>
-        State
-      </th>
-      <th>
-        Email
+        Service Name
       </th>
     </tr>
     {% if regs%}
-    {%for i,y in regs%}
+    {%for i in regs%}
     <tr>
       <td class="text">
         {{loop.index}}
       </td>
       <td class="text">
-        {{i.sp_fname}} {{i.sp_lname}}
-      </td>
-      <td class="text">
-        {{y.state_name}}
-      </td>
-      <td class="text">
-        {{i.sp_email}}
+        {{i.service_name}}
       </td>
     </tr>
     {%else%}

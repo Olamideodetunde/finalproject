@@ -1,0 +1,17 @@
+{%extends 'admin/layout.html'%}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-4">
+      <form action="" method="post">
+        <div class="mb-3">
+          {{frm.service_name.label(class_='form-label')}}
+          {{frm.service_name(class_='form-control')}}
+          <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+        </div>
+        {{frm.submit(class_='btn btn-primary')}}
+      </form>
+    </div>
+  </div>
+</div>
+{%endblock%}

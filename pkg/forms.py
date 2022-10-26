@@ -5,6 +5,9 @@ class Login(FlaskForm):
   emailadd=StringField('Email Address',validators=[DataRequired(),Email()])
   password = PasswordField('Password',validators=[DataRequired(),Length(8,16)])
   submit= SubmitField('Submit')
+class SeviceForm(FlaskForm):
+  service_name=StringField('Service Name')
+  submit= SubmitField('Submit')
 
 class AdminForm(FlaskForm):
   emailadd=StringField('Email Address',validators=[DataRequired(),Email()])

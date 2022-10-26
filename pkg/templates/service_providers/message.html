@@ -1,4 +1,7 @@
 {% extends 'service_providers/layout.html'%}
+{%block title%}
+Message
+{%endblock%}
 {% block content%}
 <div class="col-md-5 m-2 ">
   <form action="" method="post" class="bg-white p-3" style="box-shadow: 2px 2px 5px;" id="myform">
@@ -25,7 +28,7 @@
     $('#btn').click(function(){
       var data2send=$('#myform').serialize()
       $.ajax({
-        url:"{{url_for('sp_message')}}",
+        url:"{{url_for('sp_messageget')}}",
         data:data2send,
         type:'post',
         dataType:'json',

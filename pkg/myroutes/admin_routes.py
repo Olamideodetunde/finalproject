@@ -2,8 +2,8 @@ import re,os,random,string
 from flask import render_template,request,redirect,url_for,flash,session,jsonify
 from werkzeug.security import check_password_hash,generate_password_hash
 from pkg import hireapp,db
-from pkg.forms import AdminForm
-from pkg.mymodels import Admin,Sp,Payment,State, Transaction
+from pkg.forms import AdminForm,SeviceForm
+from pkg.mymodels import Admin, Service,Sp,Payment,State, Transaction
 @hireapp.route('/admin/login',methods=['POST','GET'])
 def admin_login():
   if request.method=='GET':
@@ -37,7 +37,37 @@ def all_payments():
   admin_user=session.get('admin')
   if admin_user:
     regs=db.session.query(Transaction).all()
-    return render_template('admin/all_payments')
+    return render_template('admin/all_payments.html')
+  else:
+    return redirect('/admin/login')
+@hireapp.route('/admin/add-service',methods=['POST','GET'])
+def add_service():
+  admin_user=session.get('admin')
+  if admin_user:
+    frm=SeviceForm()
+    if request.method == 'GET':
+      return render_template('admin/add_services.html',frm=frm)
+    else:
+      if frm.validate_on_submit():
+        service_name=request.form.get('service_name')
+        rec=db.session.query(Service).filter(Service.service_name==service_name)
+        if rec:
+          r=Service(service_name=service_name)
+          db.session.add(r)
+          db.session.commit()
+          return redirect(url_for('all_services'))
+        else:
+          return redirect(url_for('all_services'))
+      else:
+        return render_template('admin/add_services.html',frm=frm)
+  else:
+    return redirect('/admin/login')
+@hireapp.route('/admin/all_services')
+def all_services():
+  admin_user=session.get('admin')
+  if admin_user:
+    regs=db.session.query(Service).all()
+    return render_template('admin/all_services.html',regs=regs)
   else:
     return redirect('/admin/login')
 @hireapp.route('/admin/delete/<id>')
