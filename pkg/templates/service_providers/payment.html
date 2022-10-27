@@ -2,8 +2,14 @@
 {%block title%}
 Subscribe
 {%endblock%}
+{%block name%}
+{{spdetails.sp_fname}}
+{% endblock%}
+{%block email%}
+{{spdetails.sp_email}}
+{% endblock%}
 {% block content %}
-{%if transdeets%}
+{%if transdeets.trx_status =='paid'%}
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-11">

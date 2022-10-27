@@ -2,6 +2,12 @@
 {%block title%}
 Message
 {%endblock%}
+{%block name%}
+{{records.sp_fname}}
+{% endblock%}
+{%block email%}
+{{records.sp_email}}
+{% endblock%}
 {% block content%}
 <div class="col-md-5 m-2 ">
   <form action="" method="post" class="bg-white p-3" style="box-shadow: 2px 2px 5px;" id="myform">

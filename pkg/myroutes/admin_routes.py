@@ -2,8 +2,8 @@ import re,os,random,string
 from flask import render_template,request,redirect,url_for,flash,session,jsonify
 from werkzeug.security import check_password_hash,generate_password_hash
 from pkg import hireapp,db
-from pkg.forms import AdminForm,SeviceForm
-from pkg.mymodels import Admin, Service,Sp,Payment,State, Transaction
+from pkg.forms import AdminForm,SeviceForm,PriceForm
+from pkg.mymodels import Admin, Message, Service,Sp,Payment,State, Subscription, Transaction
 @hireapp.route('/admin/login',methods=['POST','GET'])
 def admin_login():
   if request.method=='GET':
@@ -37,7 +37,7 @@ def all_payments():
   admin_user=session.get('admin')
   if admin_user:
     regs=db.session.query(Transaction).all()
-    return render_template('admin/all_payments.html')
+    return render_template('admin/all_payments.html',regs=regs)
   else:
     return redirect('/admin/login')
 @hireapp.route('/admin/add-service',methods=['POST','GET'])
@@ -62,12 +62,38 @@ def add_service():
         return render_template('admin/add_services.html',frm=frm)
   else:
     return redirect('/admin/login')
+@hireapp.route('/admin/change-price',methods=['POST','GET'])
+def change_price():
+  admin_user=session.get('admin')
+  if admin_user:
+    frm=PriceForm()
+    if request.method == 'GET':
+      return render_template('admin/change_price.html',frm=frm)
+    else:
+      if frm.validate_on_submit():
+        sub_amount=request.form.get('sub_amount')
+        r=db.session.query(Subscription).filter(Subscription.subscription_id=='1').first()
+        r.subscription_amount=sub_amount
+        db.session.commit()
+        return redirect(url_for('change_price'))
+      else:
+        return render_template('admin/change_price.html',frm=frm)
+  else:
+    return redirect('/admin/login')
 @hireapp.route('/admin/all_services')
 def all_services():
   admin_user=session.get('admin')
   if admin_user:
     regs=db.session.query(Service).all()
     return render_template('admin/all_services.html',regs=regs)
+  else:
+    return redirect('/admin/login')
+@hireapp.route('/admin/all_message')
+def all_message():
+  admin_user=session.get('admin')
+  if admin_user:
+    msg=db.session.query(Message).all()
+    return render_template('admin/all_message.html',msg=msg)
   else:
     return redirect('/admin/login')
 @hireapp.route('/admin/delete/<id>')

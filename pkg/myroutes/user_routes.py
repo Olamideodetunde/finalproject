@@ -210,7 +210,8 @@ def sp_dashboard():
 def sp_message():
   if session.get('loggedin')!=None:
       x=MessageForm()
-      return render_template('service_providers/message.html',message=x)
+      records=db.session.query(Sp).filter(Sp.sp_id==session.get('loggedin')).first()
+      return render_template('service_providers/message.html',message=x,records=records)
   else:
     return redirect(url_for('form_page'))
 @hireapp.route('/sp_messageget',methods=['GET','POST'])
@@ -230,7 +231,8 @@ def sp_messageget():
 def sp_faq():
   if session.get('loggedin')!=None:
     msg=db.session.query(Message).limit(5).all()
-    return render_template('service_providers/faq.html',message=msg)
+    records=db.session.query(Sp).filter(Sp.sp_id==session.get('loggedin')).first()
+    return render_template('service_providers/faq.html',message=msg,records=records)
   else:
     return redirect(url_for('form_page'))
 @hireapp.route('/sp_details/<id>')

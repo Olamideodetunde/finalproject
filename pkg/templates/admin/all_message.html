@@ -1,6 +1,6 @@
 {%extends 'admin/layout.html'%}
 {%block email%}
-admin
+admin@hire.com
 {%endblock%}
 {% block content%}
   <table class="table table-striped">
@@ -12,32 +12,30 @@ admin
         Fullname
       </th>
       <th>
-        Transaction Id
+        Message
       </th>
       <th>
-        Status
+        Time Sent
       </th>
       <th>
-        Email
+        Actions
       </th>
     </tr>
-    {% if regs%}
-    {%for i in regs%}
+    {% if msg%}
+    {%for i in msg%}
     <tr>
       <td class="text">
         {{loop.index}}
       </td>
       <td class="text">
-        {{i.user_whopaid.sp_fname}} {{i.user_whopaid.sp_lname}}
+        {{i.userdeets.sp_fname}} {{i.userdeets.sp_lname}}
       </td>
       <td class="text">
-        {{i.trx_refno}}
+        {{i.message_title}}
       </td>
       <td class="text">
-        {{i.trx_status}}
-      </td>
-      <td class="text">
-        {{i.user_whopaid.sp_email}}
+        <a href="/admin/details/{{i.userdeets.sp_id}}">Details|</a>
+        <a href="/admin/delete/{{i.userdeets.sp_id}}" onclick="return confirm('Are You Sure You Want to Delete This User?')">Delete User</a>
       </td>
     </tr>
     {%else%}

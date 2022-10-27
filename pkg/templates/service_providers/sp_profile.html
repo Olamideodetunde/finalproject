@@ -2,13 +2,19 @@
 {%block title%}
 Update Profile
 {%endblock%}
+{%block name%}
+{{records.sp_fname}}
+{% endblock%}
+{%block email%}
+{{records.sp_email}}
+{% endblock%}
 {% block content%}
 <form action="" method="post" class="p-md-5" id="formdeets" enctype="multipart/form-data">
   <h1 class="text-center" style="font-family: Unna,Serif;">Update Profile</h1>
   <input type="image" src="/static/uploads/{{records.sp_image}}" width="200" height="200"  alt="profile image">
   <div class="mb-3">
     <label for="">Upload Profile Photo</label>
-    {{b.image(class_='form-control',value=records.sp_image)}}
+    {{b.image(class_='form-control')}}
   </div>
   <div class="mb-3">
     <label for="">Firstname</label>

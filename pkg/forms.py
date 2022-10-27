@@ -9,6 +9,10 @@ class SeviceForm(FlaskForm):
   service_name=StringField('Service Name')
   submit= SubmitField('Submit')
 
+class PriceForm(FlaskForm):
+  sub_amount=StringField('Subscription Amount')
+  submit= SubmitField('Submit')
+
 class AdminForm(FlaskForm):
   emailadd=StringField('Email Address',validators=[DataRequired(),Email()])
   password = PasswordField('Password',validators=[DataRequired(),Length(8,16)])
