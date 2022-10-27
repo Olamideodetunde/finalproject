@@ -62,7 +62,6 @@ def filter_search():
           </div>'''
           return data2send
         else:
-
           data2send=f'''<div class="row border my-3 bg-white">
             <div class="col-md-11 m-3">
               <div>
@@ -127,22 +126,22 @@ def sp_payment():
     if request.method=='GET':
       sub=db.session.query(Subscription).first()
       spdetails=db.session.query(Sp).filter(Sp.sp_id==session.get('loggedin')).first()
-      transdeets=db.session.query(Transaction).filter(Transaction.trx_refno==session.get('tref'),Transaction.trx_user==session.get('loggedin')).first()
+      transdeets=db.session.query(Transaction).filter(Transaction.trx_user==session.get('loggedin')).first()
       return render_template('service_providers/payment.html',sub=sub,spdetails=spdetails,transdeets=transdeets)
     else:
-            userid = session.get('loggedin')
-            refno = int(random.random() * 1000000000)
-            session['tref'] = refno
-            trans = Transaction(trx_user=userid,trx_refno=refno,trx_totalamt=3000,trx_status='pending',trx_method='cash')            
-            db.session.add(trans) 
-            db.session.commit()
-            id = trans.trx_id
-            totalamt=''
-            pobj = Payment(sp_id=userid,subscription_id=1,pay_trxid=id)
-            db.session.add(pobj)
-            db.session.commit() 
-           
-            return redirect('/confirm') 
+        userid = session.get('loggedin')
+        refno = int(random.random() * 1000000000)
+        session['tref'] = refno
+        trans = Transaction(trx_user=userid,trx_refno=refno,trx_totalamt=3000,trx_status='pending',trx_method='cash')            
+        db.session.add(trans) 
+        db.session.commit()
+        id = trans.trx_id
+        totalamt=''
+        pobj = Payment(sp_id=userid,subscription_id=1,pay_trxid=id)
+        db.session.add(pobj)
+        db.session.commit() 
+         
+        return redirect('/confirm') 
   else:
     return redirect(url_for('form_page'))
 @hireapp.route('/confirm')
@@ -197,12 +196,6 @@ def paystack_response():
             return "Payment Failed" 
     else:
         return redirect('/login')
-@hireapp.route('/sp_subscription')
-def sp_subscription():
-  if session.get('loggedin')!=None:
-    return render_template('service_providers/subscription.html')
-  else:
-    return redirect(url_for('form_page'))
 @hireapp.route('/sp_dashboard')
 def sp_dashboard():
   loggedin=session.get('loggedin')

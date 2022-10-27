@@ -75,7 +75,7 @@
   <section>
     <div class="container-fluid" >
       {% for i in records%}
-      <div class="row border my-3 bg-white" id="sp">
+      <div class="row border my-3 bg-white" class="sp">
         <div class="col-md-11 m-3">
           <div>
             <div>
@@ -98,7 +98,7 @@
         </div>
       </div>
       {%endfor%}
-      <div class="row" id="newsp">
+      <div class="row" class="newsp">
 
       </div>
     </div>
@@ -129,7 +129,7 @@
   <script>
     $(document).ready(function(){
       $('#btn').click(function(){
-      $('#sp').hide()
+        $('.sp').css({'display':'none'})
       var data=$('#myform').serialize()
       $.ajax({
         url:"{{url_for('filter_search')}}",
@@ -137,7 +137,7 @@
         type:'get',
         dataType:'text',
         success:function(response){
-          $('#newsp').html(response)
+          $('.newsp').html(response)
         }
       })
       })
