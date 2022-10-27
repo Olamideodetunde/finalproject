@@ -1,7 +1,9 @@
+from datetime import datetime,timedelta
 import re,os,random,string
-from flask import render_template,request,redirect,url_for,flash,session,jsonify
+import requests
+from flask import render_template,request,redirect,url_for,flash,session,jsonify,json
 from werkzeug.security import check_password_hash,generate_password_hash
-from pkg.mymodels import Sp,State,Service,Message,Homesearch, Subscription,Transaction
+from pkg.mymodels import Sp,State,Service,Message,Homesearch, Subscription,Transaction,Payment
 from pkg import hireapp,db
 from pkg.forms import MessageForm, Signup,Login,Profile
 @hireapp.route('/',methods=['POST','GET'])
@@ -20,18 +22,69 @@ def home_page():
     return redirect(url_for('profile_page'))
 @hireapp.route('/profile',methods=['GET','POST'])
 def profile_page():
-  if request.method=='GET':
-    records=db.session.query(Sp).all()
-    service=db.session.query(Service).all()
-    state=db.session.query(State).all()
-    search=db.session.query(Homesearch).filter(Homesearch.search_id==session.get('search')).all()
-    return render_template('user/profx.html',records=records,service=service,state=state,search=search)
-  else:
-    service=request.form.get('service')
-    state=request.form.get('state')
-    records=db.session.query(Sp).filter(Sp.sp_location==state or Sp.sp_services==service)
-    data2send=jsonify(records)
-    return data2send
+      records=db.session.query(Sp).all()
+      service=db.session.query(Service).all()
+      state=db.session.query(State).all()
+      return render_template('user/profx.html',records=records,service=service,state=state)
+@hireapp.route('/filter_search',methods=['GET'])
+def filter_search():
+      state=request.args.get('state')
+      service=request.args.get('services')
+      if state=='' and service=='':
+        record=db.session.query(Sp).all()
+      elif state=='' and service!='':
+        record=db.session.query(Sp).filter(Sp.sp_services==service).all()
+      elif state!='' and service=='':
+        record=db.session.query(Sp).filter(Sp.sp_location==state).all()
+      else:
+        record=db.session.query(Sp).filter(Sp.sp_location==state,Sp.sp_services==service).all()
+      data2send=''
+      if record:
+        for i in record:
+          if i.sp_image == None:
+            data2send=f'''<div class="row border my-3 bg-white">
+            <div class="col-md-11 m-3">
+              <div>
+                <div>
+                  <img src="../static/images/profile11.jpg" class="img-fluid m-3 rounded-pill" style="width:3.906vw;">
+                  <span class="text-center"><a href="/sp_details/{i.sp_id}" class=" h4 text-decoration-none text-primary title2" style="font-family: 'Unna', serif;">{i.sp_fname} {i.sp_lname}</a></span>
+                </div>
+                <div class="d-flex">
+                  <div class="me-5">
+                    <div><b>Service:</b>{i.servicedeets.service_name}</div>
+                  </div>
+                  <div>
+                    <div><b>Location:</b>{i.statedeets.state_name}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>'''
+          return data2send
+        else:
+
+          data2send=f'''<div class="row border my-3 bg-white">
+            <div class="col-md-11 m-3">
+              <div>
+                <div>
+                  <img src="/static/uploads/{i.sp_image}" class="img-fluid m-3 rounded-pill" style="width:3.906vw;">
+                  <span class="text-center"><a href="/sp_details/{i.sp_id}" class=" h4 text-decoration-none text-primary title2" style="font-family: 'Unna', serif;">{i.sp_fname} {i.sp_lname}</a></span>
+                </div>
+                <div class="d-flex">
+                  <div class="me-5">
+                    <div><b>Service:</b>{i.servicedeets.service_name}</div>
+                  </div>
+                  <div>
+                    <div><b>Location:</b>{i.statedeets.state_name}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>'''
+          return data2send
+      else:
+        data2send='<h1>No Records Found</h1>'
+        return data2send
 @hireapp.route('/form',methods=['GET','POST'])
 def form_page():
   form=Login()
@@ -68,41 +121,82 @@ def signup_page():
     db.session.add(b)
     db.session.commit()
     return redirect(url_for('form_page'))
-@hireapp.route('/sp_payment')
+@hireapp.route('/sp_payment',methods=['POST','GET'])
 def sp_payment():
   if session.get('loggedin') != None:
     if request.method=='GET':
-     return render_template('service_providers/payment.html')
+      sub=db.session.query(Subscription).first()
+      spdetails=db.session.query(Sp).filter(Sp.sp_id==session.get('loggedin')).first()
+      transdeets=db.session.query(Transaction).filter(Transaction.trx_refno==session.get('tref'),Transaction.trx_user==session.get('loggedin')).first()
+      return render_template('service_providers/payment.html',sub=sub,spdetails=spdetails,transdeets=transdeets)
     else:
-            '''Retrieve form data, and insert into purchases table'''
             userid = session.get('loggedin')
-            
-            '''Generate a transation ref no and keep it in a session variable'''
             refno = int(random.random() * 1000000000)
             session['tref'] = refno
-
-            '''Insert into Transaction Table'''
-            trans = Transaction(trx_user=userid,trx_refno=refno,trx_status='pending',trx_method='cash')            
+            trans = Transaction(trx_user=userid,trx_refno=refno,trx_totalamt=3000,trx_status='pending',trx_method='cash')            
             db.session.add(trans) 
             db.session.commit()
-            '''Get the id from transaction table and insert into purchases table'''
             id = trans.trx_id
-           
-            productid = request.form.getlist('productid') #[1,2,3]
-            total_amt = 0
-            for p in productid:
-                pobj = Subscription(pur_userid=userid,pur_productid=p,pur_trxid=id)
-                db.session.add(pobj)
-                db.session.commit() 
-
-            '''UPDATE the total amount on transaction table with product_amt'''
-
-            trans.trx_totalamt = total_amt
-            db.session.commit()
+            totalamt=''
+            pobj = Payment(sp_id=userid,subscription_id=1,pay_trxid=id)
+            db.session.add(pobj)
+            db.session.commit() 
            
             return redirect('/confirm') 
   else:
     return redirect(url_for('form_page'))
+@hireapp.route('/confirm')
+def confirm_subscription():
+    """The button here takes them to Paystack"""
+    userid = session.get('loggedin')
+    transaction_ref = session.get('tref')
+    if userid !=None:
+        '''Retrieve all the things this user has selected from Purchases table
+        save it in a variable and Then send it to the template'''        
+        data = db.session.query(Payment).join(Transaction).filter(Transaction.trx_refno==transaction_ref).all()       
+        return render_template('service_providers/confirm_subscription.html',data=data)
+    else:
+        return redirect('/login')
+@hireapp.route('/paystack_step1',methods=['POST'])
+def paystack():
+  if session.get('loggedin')!=None:
+    url='https://api.paystack.co/transaction/initialize'
+    userdeets=Sp.query.get(session.get('loggedin'))
+    deets=Transaction.query.filter(Transaction.trx_refno==session.get('tref')).first()
+    data={'email':userdeets.sp_email,'amount':deets.trx_totalamt*100,'reference':deets.trx_refno}
+    headers={'Content_Type':'application/json','Authorization':'Bearer sk_test_fb58555bf41a08607aca1beff850bae08805faa7'}
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+    rspjson = json.loads(response.text) 
+    return redirect(rspjson['data']['authorization_url'])
+  else:
+    return redirect(url_for('user_login'))
+@hireapp.route('/paystack_reponse')
+def paystack_response():
+    userid = session.get('loggedin')
+    if userid != None:
+        refno = session.get('tref')
+
+        headers = {"Content-Type": "application/json","Authorization":"Bearer sk_test_fb58555bf41a08607aca1beff850bae08805faa7"}
+
+        response = requests.get(f"https://api.paystack.co/transaction/verify/{refno}",headers=headers)
+        rspjson = response.json()
+        if rspjson['data']['status'] =='success':
+            amt = rspjson['data']['amount']
+            ipaddress = rspjson['data']['ip_address']
+            t = Transaction.query.filter(Transaction.trx_refno==refno).first()
+            t.trx_status = 'paid'
+            t.trx_expiry=datetime.now()+timedelta(days=30)
+            db.session.add(t)
+            db.session.commit()
+            return redirect(url_for('sp_payment'))  #update database and redirect them to the feedback page
+        else:
+            t = Transaction.query.filter(Transaction.trx_refno==refno).first()
+            t.trx_status = 'failed'
+            db.session.add(t)
+            db.session.commit()
+            return "Payment Failed" 
+    else:
+        return redirect('/login')
 @hireapp.route('/sp_subscription')
 def sp_subscription():
   if session.get('loggedin')!=None:

@@ -3,37 +3,47 @@
 Subscribe
 {%endblock%}
 {% block content %}
-  <section>
-    <div class="container-fluid">
-      <div class="row"  style="justify-content: center;">
-        <div class="col-md-4">
-          <div>
-            <form class="bg-white p-4 col-12 rounded" style="box-shadow: 2px 2px 5px;">
-              <h2 class="text-primary text-center" style="font-family: Unna,Serif;">Subscribe</h2>
-              <div class="mb-3">
-                <label for="fname" class="form-label">First Name</label>
-                <input class="form-control" required id="fname" name="sp_fname" placeholder="Enter your First name">
-              </div>
-              <div class="mb-3">
-                <label for="lname" class="form-label">Last Name</label>
-                <input class="form-control" required id="lname" name="sp_lname" placeholder="Enter your Last name">
-              </div>
-              <div class="mb-3">
-                <label for="email" class="form-label">Email Address</label>
-                <input class="form-control" required id="email" name="sp_email" placeholder="Enter your Last name">
-              </div>
-              <div class="mb-3">
-                <label for="sp_type" class="form-label">Subscription Price</label>
-                <span>{{sub.subscription_amount}}</span>
-              </div>
-              <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
-              <div>
-                <button class="btn btn-primary" type="submit">Subscribe</button>
-              </div>
-            </form>
-          </div>
+{%if transdeets%}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-11">
+      <h1 class="alert alert-success">Payment Succesfull Payment Status: Active</h1>
+    </div>
+  </div>
+</div>
+{%else%}
+<section>
+  <div class="container-fluid">
+    <div class="row"  style="justify-content: center;">
+      <div class="col-md-4">
+        <div>
+          <form class="bg-white p-4 col-12 rounded" method="post" action="" style="box-shadow: 2px 2px 5px;">
+            <h2 class="text-primary text-center" style="font-family: Unna,Serif;">Subscribe</h2>
+            <div class="mb-3">
+              <label for="fname" class="form-label">First Name</label>
+              <input class="form-control" value="{{spdetails.sp_fname}}" required id="fname" name="sp_fname" placeholder="Enter your First name">
+            </div>
+            <div class="mb-3">
+              <label for="lname" class="form-label">Last Name</label>
+              <input class="form-control" value="{{spdetails.sp_lname}}" required id="lname" name="sp_lname" placeholder="Enter your Last name">
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <input class="form-control" required value="{{spdetails.sp_email}}" id="email" name="sp_email" placeholder="Enter your Last name">
+            </div>
+            <div class="mb-3">
+              <label for="sp_type" class="form-label">Subscription Price</label>
+              <span>{{sub.subscription_amount}}</span>
+            </div>
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+            <div>
+              <button class="btn btn-primary" type="submit">Subscribe</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+{%endif%}
 {% endblock %}

@@ -12,20 +12,22 @@ Confirm Subscription
             <tr> 
               <th>S/N</th>
               <th>Name</th>
+              <th>Type</th>
               <th>Price</th>
             </tr>
             {%for i in data%}
             <tr> 
-              <td>S/N</td>
-              <td>Name</td>
-              <td>Price</td>
+              <td>{{loop.index}}</td>
+              <td>{{i.spdeets.sp_fname}} {{i.spdeets.sp_lname}}</td>
+              <td>Subscription</td>
+              <td>{{i.trxdeets.trx_totalamt}}</td>
             </tr>
-            {%endfor%}
             <tr>
               <td>TOTAL</td>
-              <td colspan="2">{{ total|sum() }}</td>
+              <td colspan="2">{{i.trxdeets.trx_totalamt}}</td>
             </tr>
           </table>
+          {%endfor%}
           <button class="btn btn-primary">Confirm</button>
         </form>
       </div>

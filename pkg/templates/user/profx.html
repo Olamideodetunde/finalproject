@@ -46,44 +46,26 @@
   <section>
     <div class="container-fluid">
       <div class="row d-flex p-3 bg-white" style="box-shadow: 1px 1px 5px;">
-        <div style="display: none;">
-        {%set searchval=[]%}
-        {%if search%}
-        {%for i in search%}
-          {{searchval.append(i)}}
-        {%endfor%}
-        {%else%}
-        {{searchval.append('None')}}
-        {%endif%}
-      </div>
-        <form action="" method="post" id="form">
+        <form action="" method="get" id="myform">
           <div class="row">
             <div class="col-4">
               <select name="services" class="form-select search_bar">
-                <option value="">Filter Services</option>
+                <option value="">All Services</option>
                 {% for u in service%}
-                {%if searchval[0].search_service==u.service_id%}
-                  <option value="{{u.service_id}}" selected>{{u.service_name}}</option>
-                {%else%}
-                  <option value="{{u.service_id}}">{{u.service_name}}</option>
-                {%endif%}
+                <option value="{{u.service_id}}">{{u.service_name}}</option>
                 {%endfor%}
               </select>
             </div>
             <div class="col-4">
               <select name="state" class="form-select search_bar">
-                <option value="">Filter Location</option>
+                <option value="">All Location</option>
                 {% for y in state%}
-                {%if searchval[0].search_state==y.state_id%}
-                  <option value="{{y.state_id}}" selected>{{y.state_name}}</option>
-                {%else%}
                   <option value="{{y.state_id}}" >{{y.state_name}}</option>
-                {%endif%}
                 {%endfor%}
               </select>
             </div>
             <div class="col-2">
-              <button class="btn col-12 btn-primary search_bar" type="button" id="btn">Search</button>
+              <button class="btn col-12 btn-primary search_bar" type="submit" id="btn">Search</button>
             </div>
           </div>
         </form>
@@ -91,10 +73,9 @@
     </div>
   </section>
   <section>
-    <div class="container-fluid">
-      {%if records%}
+    <div class="container-fluid" >
       {% for i in records%}
-      <div class="row border my-3 bg-white">
+      <div class="row border my-3 bg-white" id="sp">
         <div class="col-md-11 m-3">
           <div>
             <div>
@@ -117,32 +98,8 @@
         </div>
       </div>
       {%endfor%}
-      {%else%}
-      <div class="row border bg-white">
-        <div class="col-md-11 m-3">
-          <h3>No Profile Found</h3>
-        </div>
-      </div>
-      {%endif%}
-    </div>
-  <section>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-12">
-          <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-              <li class="page-item disabled">
-                <a class="page-link">Previous</a>
-              </li>
-              <li class="page-item"><a class="page-link" href="profx.html">1</a></li>
-              <li class="page-item"><a class="page-link" href="#none">2</a></li>
-              <li class="page-item"><a class="page-link" href="#none">3</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+      <div class="row" id="newsp">
+
       </div>
     </div>
   </section>
@@ -171,16 +128,19 @@
   <script src="../static/js/jquery.min.js"></script>
   <script>
     $(document).ready(function(){
-    $('#btn').click(function(){
-      var data=$('#form').serialize()
-    $.ajax({
-        url:"{{url_for('profile_page')}}",
+      $('#btn').click(function(){
+      $('#sp').hide()
+      var data=$('#myform').serialize()
+      $.ajax({
+        url:"{{url_for('filter_search')}}",
         data:data,
-        type:'post',
-        dataType:'json',
-        
+        type:'get',
+        dataType:'text',
+        success:function(response){
+          $('#newsp').html(response)
+        }
       })
-    })
+      })
     })
   </script>
 </body>

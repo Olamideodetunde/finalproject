@@ -30,6 +30,7 @@ class Transaction(db.Model):
     trx_method=db.Column(db.Enum('card','cash'), nullable=True)
     trx_paygate=db.Column(db.Text(), nullable=True)
     trx_date=db.Column(db.DateTime(), default=datetime.datetime.utcnow())
+    trx_expiry=db.Column(db.DateTime())
     user_whopaid=db.relationship('Sp',backref='mytrxs')
 class Subscription(db.Model):
     __tablename__='subscription' 
@@ -40,8 +41,10 @@ class Payment(db.Model):
     payment_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
     subscription_id = db.Column(db.Integer(),db.ForeignKey('subscription.subscription_id'))
     sp_id = db.Column(db.Integer(),db.ForeignKey('service_providers.sp_id'))
+    pay_trxid= db.Column(db.Integer(),db.ForeignKey('transaction.trx_id'))
     spdeets=db.relationship('Sp',backref='payment')
     subdeets=db.relationship('Subscription',backref='paymentdeets')
+    trxdeets=db.relationship('Transaction',backref='payment')
 
 class Sp(db.Model):
     __tablename__='service_providers' 
