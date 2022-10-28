@@ -82,7 +82,7 @@
               {%if i.sp_image ==None%}
               <img src="../static/images/profile11.jpg" class="img-fluid m-3 rounded-pill" style="width:3.906vw;">
               {%else%}
-              <img src="/static/uploads/{{i.sp_image}}" class="img-fluid m-3 rounded-pill" style="width:3.906vw;">
+              <img src="/static/uploads/{{i.sp_image}}" class="img-fluid m-3 rounded-pill" style="width:50px;height: 50px;">
               {%endif%}
               <span class="text-center"><a href="/sp_details/{{i.sp_id}}" class=" h4 text-decoration-none text-primary title2" style="font-family: 'Unna', serif;">{{i.sp_fname}} {{i.sp_lname}}</a></span>
             </div>

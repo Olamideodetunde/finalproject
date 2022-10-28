@@ -44,7 +44,7 @@
       </div>
   </nav>
   <section>
-    <div class="container-fluid bg-white p-3" style="box-shadow: 1px 1px 3px;">
+    <div class="container-fluid bg-white p-3">
       <div class="row">
         <div class="col-md-2">
           <img src="../../static/uploads/{{records.sp_image}}" class="img-fluid" alt="profile image" width="200" height="200">
@@ -93,21 +93,36 @@
           </p>
         </div>
       </div>
-      <div class="row mb-3" style="justify-content:center;">
-        <div class="col-md-4 p-3 border">
-          <form action="" id="form">
-            <div class="mb-3">
-              <input type="text" placeholder="Enter Your Name" class="form-control">
-            </div>
-            <div class="mb-3">
-              <textarea name="comment" id="comment" cols="30" rows="5" class="form-control"></textarea>
-            </div>
+    </div>
+  </section>
+  <section>
+    <div class="container-fluid bg-white p-3">
+      <h1>Some Rate and Review</h1>
+        {%for i in data%}
+        <div class="row m-3" id="commentdisplay">
+        <div class="col-6 border" id="commentdisplay">
+          <div>
+            <p>{{i.review_content}}</p>
+            <i><b>Made By</b> {{i.review_by}}</i>
+          </div>
+        </div>
+       </div>
+        {%endfor%}
 
-                <button class="btn btn-warning" type="button" id="btn">Comment</button>
-                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+      <div class="row m-3">
+        <div class="col-md-6 p-5 border">
+          <form action="" method="post" id="form">
+            <div class="mb-3">
+              <input type="text" placeholder="Enter Your Name" id="name" name="user_name" class="form-control">
+            </div>
+            <div class="mb-3">
+              <textarea name="review" id="review" placeholder="Review The Service" cols="30" rows="5" class="form-control"></textarea>
+            </div>
+              <p class="text-center"><button class="btn btn-primary col-3" type="submit" id="btn">Review</button></p>
+              <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
           </form>
         </div>
-        </div>
+      </div>
     </div>
   </section>
   <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -116,7 +131,20 @@
     $(document).ready(function(){
       $('#btn').click(function(){
         var data2send=$('#form').serialize()
-
+        $.ajax({
+        url:"/review_details/{{records.sp_id}}",
+        data:data2send,
+        type:'post',
+        dataType:'json',
+        success:function(response){
+          $('#commentdetails').append("<p style='font-family:Courier New;color:blue'>"+response['review']+"</p><span>Made By"+response['madeby']+"</span>")
+          $('#review').val('')
+          $('#name').val('')
+        },
+        error:function(errormsg){
+          console.log(errormsg)
+        }
+      })
       })
     })
   </script>

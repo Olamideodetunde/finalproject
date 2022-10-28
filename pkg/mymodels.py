@@ -25,13 +25,14 @@ class Transaction(db.Model):
     trx_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
     trx_user = db.Column(db.Integer(),db.ForeignKey('service_providers.sp_id'), nullable=False)
     trx_refno= db.Column(db.String(255), nullable=True)
-    trx_totalamt = db.Column(db.Float(), nullable=True)
+    trx_totalamt = db.Column(db.Integer(),db.ForeignKey('subscription.subscription_id'), nullable=True)
     trx_status = db.Column(db.Enum('pending','paid','failed'), nullable=True)
     trx_method=db.Column(db.Enum('card','cash'), nullable=True)
     trx_paygate=db.Column(db.Text(), nullable=True)
     trx_date=db.Column(db.DateTime(), default=datetime.datetime.utcnow())
     trx_expiry=db.Column(db.DateTime())
     user_whopaid=db.relationship('Sp',backref='mytrxs')
+    amount_paid=db.relationship('Subscription',backref='trx_made')
 class Subscription(db.Model):
     __tablename__='subscription' 
     subscription_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
@@ -45,6 +46,14 @@ class Payment(db.Model):
     spdeets=db.relationship('Sp',backref='payment')
     subdeets=db.relationship('Subscription',backref='paymentdeets')
     trxdeets=db.relationship('Transaction',backref='payment')
+
+class Review(db.Model): 
+    review_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
+    review_content = db.Column(db.String(255), nullable=False)
+    review_by = db.Column(db.String(255), nullable=False)
+    review_for = db.Column(db.Integer(),db.ForeignKey('service_providers.sp_id'), nullable=False)
+    review_date=db.Column(db.DateTime(), default=datetime.datetime.utcnow())
+    sp_deets=db.relationship('Sp',backref='reviewme')
 
 class Sp(db.Model):
     __tablename__='service_providers' 

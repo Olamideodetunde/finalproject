@@ -3,7 +3,7 @@ import re,os,random,string
 import requests
 from flask import render_template,request,redirect,url_for,flash,session,jsonify,json
 from werkzeug.security import check_password_hash,generate_password_hash
-from pkg.mymodels import Sp,State,Service,Message,Homesearch, Subscription,Transaction,Payment
+from pkg.mymodels import Review, Sp,State,Service,Message,Homesearch, Subscription,Transaction,Payment
 from pkg import hireapp,db
 from pkg.forms import MessageForm, Signup,Login,Profile
 @hireapp.route('/',methods=['POST','GET'])
@@ -126,13 +126,13 @@ def sp_payment():
     if request.method=='GET':
       sub=db.session.query(Subscription).first()
       spdetails=db.session.query(Sp).filter(Sp.sp_id==session.get('loggedin')).first()
-      transdeets=db.session.query(Transaction).filter(Transaction.trx_user==session.get('loggedin')).first()
+      transdeets=db.session.query(Transaction).filter(Transaction.trx_status=='paid',Transaction.trx_user==session.get('loggedin')).first()
       return render_template('service_providers/payment.html',sub=sub,spdetails=spdetails,transdeets=transdeets)
     else:
         userid = session.get('loggedin')
         refno = int(random.random() * 1000000000)
         session['tref'] = refno
-        trans = Transaction(trx_user=userid,trx_refno=refno,trx_totalamt=3000,trx_status='pending',trx_method='cash')            
+        trans = Transaction(trx_user=userid,trx_refno=refno,trx_totalamt=1,trx_status='pending',trx_method='cash')            
         db.session.add(trans) 
         db.session.commit()
         id = trans.trx_id
@@ -152,7 +152,7 @@ def confirm_subscription():
     if userid !=None:
         '''Retrieve all the things this user has selected from Purchases table
         save it in a variable and Then send it to the template'''        
-        data = db.session.query(Payment).join(Transaction).filter(Transaction.trx_refno==transaction_ref).all()       
+        data = db.session.query(Transaction).filter(Transaction.trx_refno==transaction_ref,Transaction.trx_user==userid).first()       
         return render_template('service_providers/confirm_subscription.html',data=data)
     else:
         return redirect('/login')
@@ -162,7 +162,7 @@ def paystack():
     url='https://api.paystack.co/transaction/initialize'
     userdeets=Sp.query.get(session.get('loggedin'))
     deets=Transaction.query.filter(Transaction.trx_refno==session.get('tref')).first()
-    data={'email':userdeets.sp_email,'amount':deets.trx_totalamt*100,'reference':deets.trx_refno}
+    data={'email':userdeets.sp_email,'amount':deets.amount_paid.subscription_amount*100,'reference':deets.trx_refno}
     headers={'Content_Type':'application/json','Authorization':'Bearer sk_test_fb58555bf41a08607aca1beff850bae08805faa7'}
     response = requests.post(url, headers=headers, data=json.dumps(data))
     rspjson = json.loads(response.text) 
@@ -187,6 +187,7 @@ def paystack_response():
             t.trx_expiry=datetime.now()+timedelta(days=30)
             db.session.add(t)
             db.session.commit()
+            
             return redirect(url_for('sp_payment'))  #update database and redirect them to the feedback page
         else:
             t = Transaction.query.filter(Transaction.trx_refno==refno).first()
@@ -235,10 +236,22 @@ def sp_faq():
     return render_template('service_providers/faq.html',message=msg,records=records)
   else:
     return redirect(url_for('form_page'))
-@hireapp.route('/sp_details/<id>')
+@hireapp.route('/sp_details/<id>',methods=['POST','GET'])
 def sp_details(id):
   records=db.session.query(Sp).get(id)
-  return render_template('user/details.html',records=records)
+  data=db.session.query(Review).filter(Review.review_for==id).all()
+  return render_template('user/details.html',records=records,data=data)
+@hireapp.route('/review_details/<id>',methods=['POST','GET'])
+def review_details(id):
+    records=db.session.query(Sp).get(id)
+    user_name=request.form.get('user_name')
+    review=request.form.get('review')
+    r=Review(review_by=user_name,review_content=review,review_for=records.sp_id)
+    db.session.add(r)
+    db.session.commit()
+    data2return={'madeby':r.review_by,'review':r.review_content}
+    data_json=jsonify(data2return)
+    return data_json
 @hireapp.route('/sp_profile',methods=['POST','GET'])
 def sp_profile():
   b=Profile()
