@@ -1,0 +1,106 @@
+#hire{
+  font-size: 30px;
+};
+#hover_effect:hover{
+  background-color: black;
+}
+.paybutton{
+  border: 1px solid rgb(224, 88, 9);
+  background-color:white;
+  color: black;
+}
+.paybutton:hover{
+  background-color: rgb(224, 88, 9);
+  color: white;
+}
+.buttonpay{
+  background-color: rgb(224, 88, 9);
+  color: white !important;
+}
+.bg-img{
+  background-image: url('../images/teamphoto.jpg');
+  background-attachment:fixed;
+  background-repeat: no-repeat;
+  height:23.438vw;
+  margin:1.563vw;
+}
+.overlay{
+  background-color: rgb(0,0,0,0.5);
+  height: inherit;
+  width: inherit;
+}
+@media (max-width:1480px) and (min-width:900px){
+  .transformer:hover{
+    transform: scale(1.1,1.1);
+  }
+}
+
+.feature{
+  border: 1px solid rgb(236, 236, 236);
+}
+.feature:hover{
+  box-shadow: 1px 1px 5px;
+}
+.sidemenu{
+  background-color: black;
+  font-size: 20px;
+  padding: none !important;
+  margin: none !important;
+  min-height: 790px;
+}
+.title{
+  font-size: 50px;
+}
+.nav_gation div ul li a{
+  color: white;
+  font-weight: bolder;
+  text-decoration: none;
+}
+.nav_gation div ul li{
+  list-style-type:none;
+}
+.links:hover{
+  background-color: blue;
+}
+.log_out:hover{
+  background-color: blue;
+}
+.search_bar{
+  height:50px;
+}
+
+.sidemenu.active{
+  width: 60px;
+}
+@media screen and (max-width:768px) {
+.text{
+  font-size:10px;
+}
+.title{
+  font-size: 20px;
+}
+#hire{
+  font-size: 25px;
+};
+.title2{
+  font-size: 12px;
+}
+.rating{
+  display:none
+}
+.stat{
+  font-size: 25px;
+}
+.remove{
+  display: none;
+}
+.tobe{
+  transform: scale(0.5,0.5);
+}
+.newsize{
+  transform: scale(0.75,0.75);
+}
+.transformer{
+transform: scale(0.75,0.75);
+}
+}

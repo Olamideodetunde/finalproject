@@ -12,8 +12,9 @@ Subscribe
 {%if transdeets.trx_status =='paid'%}
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-11">
-      <h1 class="alert alert-success text">Payment Succesfull Payment Status: Active</h1>
+    <div class="col-md-11 alert alert-success">
+      <h1 class=" text">Payment Succesfull Payment Status: Active </h1>
+      <br><small><b>Expiry:</b>{{(transdeets.trx_expiry-transdeets.trx_date)}} left</small>
     </div>
   </div>
 </div>

@@ -11,7 +11,13 @@ Update Profile
 {% block content%}
 <form action="" method="post" class="p-md-5" id="formdeets" enctype="multipart/form-data">
   <h1 class="text-center" style="font-family: Unna,Serif;">Update Profile</h1>
+  {%if records.sp_image%}
   <input type="image" src="/static/uploads/{{records.sp_image}}" width="200" height="200"  alt="profile image">
+  {%else%}
+  <div class="p-3">
+    <i class="fa fa-user fa-5x tobe" aria-hidden="true"></i>
+  </div>
+  {%endif%}
   <div class="mb-3">
     <label for="">Upload Profile Photo</label>
     {{b.image(class_='form-control')}}

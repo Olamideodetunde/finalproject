@@ -1,5 +1,5 @@
 from datetime import datetime,timedelta
-import re,os,random,string
+import os,random,string
 import requests
 from flask import render_template,request,redirect,url_for,flash,session,jsonify,json
 from werkzeug.security import check_password_hash,generate_password_hash
@@ -13,60 +13,77 @@ def home_page():
   if request.method =='GET':
     return render_template('user/hire.html',state=records,service=service)
   else:
-    services=request.form.get('services')
-    state=request.form.get('state')
-    records =Homesearch(search_service=services,search_state=state)
-    db.session.add(records)
-    db.session.commit()
-    session['search']=records.search_id
-    return redirect(url_for('profile_page'))
+    if session.get('loggedin')==None:
+      services=request.form.get('services')
+      state=request.form.get('state')
+      records =Homesearch(search_service=services,search_state=state)
+      db.session.add(records)
+      db.session.commit()
+      session['search']=records.search_id
+      return redirect(url_for('profile_page'))
+    else:
+      return redirect(url_for('sp_dashboard'))
 @hireapp.route('/profile',methods=['GET','POST'])
 def profile_page():
-      records=db.session.query(Sp).all()
+  if session.get('loggedin')==None:
+    if session.get('search')==None:
+      records=db.session.query(Sp,Transaction).join(Transaction).filter(Transaction.trx_status=='paid').all()
       service=db.session.query(Service).all()
       state=db.session.query(State).all()
       return render_template('user/profx.html',records=records,service=service,state=state)
+    else:
+      search=db.session.query(Homesearch).filter(Homesearch.search_id==session.get('search')).first()
+      records=db.session.query(Sp,Transaction).join(Transaction).filter(Sp.sp_location==search.search_state,Sp.sp_services==search.search_service,Transaction.trx_status=='paid').all()
+      service=db.session.query(Service).all()
+      state=db.session.query(State).all()
+      return render_template('user/profx.html',records=records,service=service,state=state,search=search)
+  else:
+    return redirect(url_for('sp_dashboard'))
+
+@hireapp.route('/ajaxemail',methods=['GET'])
+def ajaxemail():
+  email=request.args.get('emailadd')
+  records=db.session.query(Sp).filter(Sp.sp_email==email).first()
+  x={'error':'','success':''}
+  if records:
+    x['error']='Email Address already in use'
+    return jsonify(x)
+  else:
+    x['success']='Email Address is Available'
+    return jsonify(x)
+
+@hireapp.route('/ajaxphone',methods=['GET'])
+def ajaxphone():
+  phone=request.args.get('phone')
+  records=db.session.query(Sp).filter(Sp.sp_phone==phone).first()
+  x={'error':'','success':''}
+  if records:
+    x['error']='Phone Number already taken'
+    return jsonify(x)
+  else:
+    x['success']= 'Phone Number is available'
+    return jsonify(x)
+
 @hireapp.route('/filter_search',methods=['GET'])
 def filter_search():
       state=request.args.get('state')
       service=request.args.get('services')
       if state=='' and service=='':
-        record=db.session.query(Sp).all()
+        record=db.session.query(Sp,Transaction).join(Transaction).filter(Transaction.trx_status=='paid').all()
       elif state=='' and service!='':
-        record=db.session.query(Sp).filter(Sp.sp_services==service).all()
+        record=db.session.query(Sp,Transaction).join(Transaction).filter(Sp.sp_services==service,Transaction.trx_status=='paid').all()
       elif state!='' and service=='':
-        record=db.session.query(Sp).filter(Sp.sp_location==state).all()
+        record=db.session.query(Sp,Transaction).join(Transaction).filter(Sp.sp_location==state,Transaction.trx_status=='paid').all()
       else:
-        record=db.session.query(Sp).filter(Sp.sp_location==state,Sp.sp_services==service).all()
+        record=db.session.query(Sp,Transaction).join(Transaction).filter(Sp.sp_location==state,Sp.sp_services==service,Transaction.trx_status=='paid').all()
       data2send=''
       if record:
-        for i in record:
-          if i.sp_image == None:
-            data2send=f'''<div class="row border my-3 bg-white">
-            <div class="col-md-11 m-3">
-              <div>
-                <div>
-                  <img src="../static/images/profile11.jpg" class="img-fluid m-3 rounded-pill" style="width:3.906vw;">
-                  <span class="text-center"><a href="/sp_details/{i.sp_id}" class=" h4 text-decoration-none text-primary title2" style="font-family: 'Unna', serif;">{i.sp_fname} {i.sp_lname}</a></span>
-                </div>
-                <div class="d-flex">
-                  <div class="me-5">
-                    <div><b>Service:</b>{i.servicedeets.service_name}</div>
-                  </div>
-                  <div>
-                    <div><b>Location:</b>{i.statedeets.state_name}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>'''
-          return data2send
-        else:
+        for i,y in record:
           data2send=f'''<div class="row border my-3 bg-white">
             <div class="col-md-11 m-3">
               <div>
                 <div>
-                  <img src="/static/uploads/{i.sp_image}" class="img-fluid m-3 rounded-pill" style="width:3.906vw;">
+                  <img src="/static/uploads/{i.sp_image}" class="img-fluid m-3 rounded-pill" style="width:50px;height:50px;">
                   <span class="text-center"><a href="/sp_details/{i.sp_id}" class=" h4 text-decoration-none text-primary title2" style="font-family: 'Unna', serif;">{i.sp_fname} {i.sp_lname}</a></span>
                 </div>
                 <div class="d-flex">
@@ -80,7 +97,7 @@ def filter_search():
               </div>
             </div>
           </div>'''
-          return data2send
+        return data2send
       else:
         data2send='<h1>No Records Found</h1>'
         return data2send
@@ -150,10 +167,11 @@ def confirm_subscription():
     userid = session.get('loggedin')
     transaction_ref = session.get('tref')
     if userid !=None:
+        records=Sp.query.get(userid)
         '''Retrieve all the things this user has selected from Purchases table
         save it in a variable and Then send it to the template'''        
         data = db.session.query(Transaction).filter(Transaction.trx_refno==transaction_ref,Transaction.trx_user==userid).first()       
-        return render_template('service_providers/confirm_subscription.html',data=data)
+        return render_template('service_providers/confirm_subscription.html',data=data,records=records)
     else:
         return redirect('/login')
 @hireapp.route('/paystack_step1',methods=['POST'])

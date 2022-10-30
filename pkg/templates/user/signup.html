@@ -7,7 +7,7 @@
   <meta name="author" content="Olamide Odetunde" >
   <meta name="descriptions" content="it is a project where people can come to sort the services of self-employed individuals." >
   <meta name="keywords" content="service provider,services,hire" >
-  <title>Document</title>
+  <title>SignUp Form</title>
   <link rel="stylesheet" href="../static/fontawesome/css/all.min.css">
   <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css">
   <link rel="stylesheet" href="../static/css/animate.min.css">
@@ -24,9 +24,12 @@
           <nav class="navbar navbar-expand-lg " style="background-color: #EFFFFA;">
             <div class="container-fluid">
             <a class="navbar-brand animate__animated animate__pulse animate__infinite" id="hire" href="{{url_for('home_page')}}"><b>HIRE</b></a>
-              <div class="d-inline-block">
-                <span style="font-family:'Unna', serif;" class="text-primary">Are a User?</span>
-                <a style="font-family:'Unna', serif;" href="{{url_for('form_page')}}" class="btn btn-outline-dark" id="changeable">Existing User?</a>
+              <div>
+                <div>
+                  <span style="font-family:'Unna', serif;" class="text-primary text">Are a User?</span>
+                  <a style="font-family:'Unna', serif;" href="{{url_for('form_page')}}" class="btn btn-outline-dark tobe" id="changeable">Existing User?</a>
+                </div>
+
               </div>
           </nav>
         </div>
@@ -34,37 +37,39 @@
   </nav>
   <div class="container-fluid">
     <div class="row" style="justify-content: center;">
-      <div class="col-md-6" >
-        <form action="" method="post" class="col-md-12 my-3 bg-white p-4 rounded" style="box-shadow:3px 4px 7px black;" id="signUp" autocomplete="on">
+      <div class="col-md-7" >
+        <form action="" method="post" id="myform" class="col-md-12 newsize my-3 bg-white p-4 rounded" style="box-shadow:3px 4px 7px black;" id="signUp" autocomplete="on">
           <h1 style="font-family:'Unna', serif;" class="text-center mb-5">Sign Up</h1>
           <div id="errormsage"></div>
           <div class="row mb-3">
               <div class="col-6">
-                {{y.fname(class_='form-control' , placeholder='Enter Your Fullname')}}
+                {{y.fname(class_='form-control allfields' , placeholder='Enter Your Fullname')}}
               </div>
               <div class="col-6">
-                {{y.lname(class_='form-control', placeholder='Enter Your Last Name')}}
+                {{y.lname(class_='form-control allfields', placeholder='Enter Your Last Name')}}
               </div>
           </div>
           <div class="row mb-3">
-            <div class="col-md-6">
-              {{y.emailadd(class_='form-control', placeholder='Enter Your Email Address')}}
+            <div class="col-6">
+              {{y.emailadd(class_='form-control allfields', placeholder='Enter Your Email Address')}}
+              <div id="emailmsg"></div>
             </div>
             <div class="col-6">
-              {{y.phone(class_='form-control', placeholder='Enter Your Phone Number')}}
+              {{y.phone(class_='form-control allfields', placeholder='Enter Your Phone Number')}}
+              <div id="phonemsg" ></div>
             </div>
           </div>
           <div class="row mb-3">
-            <div class="col-md-6">
-              {{y.password(class_='form-control', placeholder='Enter Your Password')}}
+            <div class="col-6">
+              {{y.password(class_='form-control allfields', placeholder='Enter Your Password')}}
             </div>
             <div class="col-6">
-              {{y.confirmpwd(class_='form-control', placeholder='Confirm  Your Password')}}
+              {{y.confirmpwd(class_='form-control allfields', placeholder='Confirm  Your Password')}}
             </div>
           </div>
           <div class="row mb-3">
-            <div class="col-md-6">
-              {{y.address(class_='form-control', placeholder='Enter Your Address')}}
+            <div class="col-6">
+              {{y.address(class_='form-control allfields', placeholder='Enter Your Address')}}
             </div>
             <div class="col-6">
               <div>
@@ -83,7 +88,7 @@
           </div>
           <div class="row mb-3">
             <div class="col-12">
-              <select name="state" id="state" class="form-select user" required>
+              <select name="state" id="state" class="form-select user allfields" required>
                 <option value="">Select your State of Residence</option>
                 {% for i in state%}
                   <option value="{{i.state_id}}">{{i.state_name}}</option>
@@ -93,7 +98,7 @@
           </div>
           <div class="row mb-3">
             <div class="col-12">
-              <select name="service" id="service" class="form-select user" required>
+              <select name="service" id="service" class="form-select user allfields" required>
                 <option value="">Select your Service</option>
                 {% for i in service%}
                   <option value="{{i.service_id}}">{{i.service_name}}</option>
@@ -101,7 +106,7 @@
               </select>
             </div>
           </div>
-          <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+          {{y.csrf_token}}
           <div class="mb-3 text-center">
             {{y.submit(class_='btn btn-primary col-4 text-center')}}
           </div>
@@ -116,7 +121,44 @@
   <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../static/js/jquery.min.js"></script>
   <script>
-    
+    $(document).ready(function(){
+      $('#emailadd').change(function(){
+        var email= $('#myform').serialize()
+        $.ajax({
+          url:"/ajaxemail",
+          data:email,
+          type:'get',
+          dataType:'json',
+          success:function(response){
+            if (response['error']=='' &&  response['success']!=''){
+              $('#emailmsg').html("<small class='text text-success'>"+ response['success']+"</small>")}
+            else{
+              $('#emailmsg').html("<small class='text text-danger'>"+ response['error']+"</small>")}
+            },
+          error:function(errormsg){
+            console.log(errormsg)
+          }
+        })
+      })
+      $('#phone').change(function(){
+        var phone=$('#myform').serialize()
+        $.ajax({
+          url:"/ajaxphone",
+          data:phone,
+          type:'get',
+          dataType:'json',
+          success:function(response){
+            if (response['error']=='' &&  response['success']!=''){
+              $('#phonemsg').html("<small class='text text-success'>"+ response['success']+"</small>")}
+            else{
+              $('#phonemsg').html("<small class='text text-danger'>"+ response['error']+"</small>")}
+          },
+          error:function(errormsg){
+            console.log(errormsg)
+          }
+        })
+      })
+    })
   </script>
 </body>
 </html>

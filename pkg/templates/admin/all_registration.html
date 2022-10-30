@@ -1,23 +1,18 @@
 {% extends 'admin/layout.html'%}
-{%block email%}
-admin@hire.com
-{%endblock%}
 {% block content%}
+<div class="col-9">
   <table class="table table-striped">
     <tr>
-      <th>
+      <th class="text">
         S/N
       </th>
-      <th>
+      <th class="text">
         Fullname
       </th>
-      <th>
-        State
-      </th>
-      <th>
+      <th class="text">
         Email
       </th>
-      <th>
+      <th class="text" >
         Actions
       </th>
     </tr>
@@ -31,14 +26,11 @@ admin@hire.com
         {{i.sp_fname}} {{i.sp_lname}}
       </td>
       <td class="text">
-        {{y.state_name}}
-      </td>
-      <td class="text">
         {{i.sp_email}}
       </td>
       <td class="text">
-        <a href="/admin/details/{{i.sp_id}}">Details|</a>
-        <a href="/admin/delete/{{i.sp_id}}" onclick="return confirm('Are You Sure You Want to Delete This User?')">Delete User</a>
+        <a class="text" href="/admin/details/{{i.sp_id}}">Details|</a>
+        <a class="text" href="/admin/delete/{{i.sp_id}}" onclick="return confirm('Are You Sure You Want to Delete This User?')">Delete User</a>
       </td>
     </tr>
     {%else%}
@@ -48,4 +40,6 @@ admin@hire.com
     {% endfor%}
     {% endif %}
   </table>
+</div>
+
 {%endblock%}

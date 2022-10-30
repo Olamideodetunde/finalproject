@@ -16,10 +16,10 @@
 </head>
 <body>
   <div class="container-fluid">
-    <div class="row">
+    <div class="row" >
         <div class="col-3 sidemenu">
           <div class="nav_gation">
-            <h1 class="text-center stat  text-primary my-4 animate__animated animate__pulse animate__infinite">
+            <h1 class="text-center stat title  text-primary my-4 animate__animated animate__pulse animate__infinite">
               <b>HIRE</b>
             </h1>
             <div>
@@ -43,12 +43,6 @@
                   </a>
                 </li>
                 <li class="links text p-2">
-                  <a href="#">
-                    <i class="fa fa-bell" aria-hidden="true"></i>
-                    <span>Notifications</span>
-                  </a>
-                </li>
-                <li class="links text p-2">
                   <a href="{{url_for('sp_faq')}}">
                     <i class="fa fa-question" aria-hidden="true"></i>
                     <span>Frequently Asked Questions</span>
@@ -60,7 +54,6 @@
                     <span>Message Us</span>
                   </a>
                 </li>
-
                 <li class="log_out text p-2">
                   <a href="{{url_for('sp_logout')}}">
                     <i class="fa-solid fa-right-from-bracket text-white"></i>
@@ -71,14 +64,14 @@
             </div>
           </div>
         </div>
-        <div class="col-8">
+        <div class="col-9">
           <div class="row bg-primary">
             <nav class="d-flex p-3" style="justify-content: space-around;" >
               <div class="remove  text">
                 <i class="fa-solid fa-bars fa-2x"></i>
               </div>
               <div class=" text">
-                <p class="h4 ">
+                <p class="h4 title2">
                   {%block name%}
                   {%endblock%}
                 </p>

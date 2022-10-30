@@ -8,3 +8,35 @@ Dashboard
 {%block email%}
 {{emailx}}
 {% endblock %}
+{%block content%}
+<div class="container-fluid p-5">
+  <div class="row p-3 mb-3" style="justify-content: space-around;">
+    <div class="col-md-4 bg-white p-3 rounded" style="box-shadow: 2px 2px 5px;">
+      <a href="{{url_for('sp_payment')}}" class="text-center" style=" text-decoration:none; ">
+        <p><i class="fa fa-money-check fa-5x" style="color:black;"></i></p>
+        <h2 style="font-family: Unna,Serif;">Subscription</h2>
+      </a>
+    </div>
+    <div class="col-md-4 bg-white p-3 rounded" style="box-shadow: 2px 2px 5px;">
+      <a href="{{url_for('sp_message')}}" class="text-center" style=" text-decoration:none; ">
+        <p><i class="fa fa-comment fa-5x" style="color:black;"></i></p>
+        <h2 style="font-family: Unna,Serif;">Message</h2>
+      </a>
+    </div>
+  </div>
+  <div class="row p-3 mb-3" style="justify-content: space-around;">
+    <div class="col-md-4 bg-white p-3 rounded" style="box-shadow: 2px 2px 5px;">
+      <a href="{{url_for('sp_faq')}}" class="text-center" style=" text-decoration:none; ">
+        <p><i class="fa fa-question fa-5x" style="color:black;"></i></p>
+        <h2 style="font-family: Unna,Serif;">FAQ</h2>
+      </a>
+    </div>
+    <div class="col-md-4 bg-white p-3 rounded" style="box-shadow: 2px 2px 5px;">
+      <a href="{{url_for('sp_profile')}}" class="text-center" style=" text-decoration:none; ">
+        <p><i class="fa fa-sticky-note fa-5x" style="color:black;"></i></p>
+        <h2 style="font-family: Unna,Serif;">Profile</h2>
+      </a>
+    </div>
+  </div>
+</div>
+{%endblock%}

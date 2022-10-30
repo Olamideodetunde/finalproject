@@ -83,25 +83,25 @@
       <div class="row d-flex p-4 bg-dark m-2" style="box-shadow: 1px 1px 5px;">
         <form action="" method="post">
           <div class="row">
-            <div class="col-4">
+            <div class="col-md-4 mb-2">
               <select name="services" id="service" class="form-select search_bar">
-                <option value="">Filter Services</option>
+                <option value="">All Services</option>
                 {% for u in service%}
                   <option value="{{u.service_id}}">{{u.service_name}}</option>
                 {%endfor%}
               </select>
             </div>
-            <div class="col-4">
+            <div class="col-md-4 mb-2">
               <select name="state" id="state" class="form-select search_bar">
-                <option value="">Filter Location</option>
+                <option value="">All Location</option>
                 {% for i in state%}
                   <option value="{{i.state_id}}">{{i.state_name}}</option>
                 {%endfor%}
               </select>
             </div>
             <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
-            <div class="col-2">
-              <button class="btn col-12 btn-primary search_bar" id="btn" onclick="validate()" type="submit">Search</button>
+            <div class="col-md-2">
+              <button class="btn btn-primary col-12 search_bar" id="btn" onclick="validate()" type="submit">Search</button>
             </div>
           </div>
         </form>
@@ -245,7 +245,7 @@
       var y =document.getElementById('service').value
       var b=document.getElementById('state').value
       if(b==''||y==''){
-        document.getElementById('errormsg').innerHTML ="<p class='text-danger'>Plese you have to select a value if you want to search</p>"
+        document.getElementById('errormsg').innerHTML ="<small class='text-danger'>Please you have to select a value if you want to search</small>"
         document.getElementById('btn').type='button'
       }else{
         document.getElementById('btn').type='submit'

@@ -75,8 +75,8 @@ class Sp(db.Model):
     genderdeets=db.relationship('Gender',backref='spgender')
 class Homesearch(db.Model): 
     search_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
-    search_state=db.Column(db.Integer(),db.ForeignKey('state.state_id'), nullable=True)
-    search_service=db.Column(db.Integer(),db.ForeignKey('service.service_id'), nullable=True)
+    search_state=db.Column(db.Integer(), nullable=True)
+    search_service=db.Column(db.Integer(), nullable=True)
 class Message(db.Model): 
     message_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
     message_content = db.Column(db.String(255), nullable=False)

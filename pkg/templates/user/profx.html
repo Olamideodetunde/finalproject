@@ -46,26 +46,27 @@
   <section>
     <div class="container-fluid">
       <div class="row d-flex p-3 bg-white" style="box-shadow: 1px 1px 5px;">
-        <form action="" method="get" id="myform">
+        <form action="" method="post" id="myform">
           <div class="row">
-            <div class="col-4">
-              <select name="services" class="form-select search_bar">
+            <div class="col-md-4 mb-2">
+              <select name="services" id="service" class="form-select search_bar">
                 <option value="">All Services</option>
                 {% for u in service%}
-                <option value="{{u.service_id}}">{{u.service_name}}</option>
+                  <option value="{{u.service_id}}">{{u.service_name}}</option>
                 {%endfor%}
               </select>
             </div>
-            <div class="col-4">
-              <select name="state" class="form-select search_bar">
+            <div class="col-md-4 mb-2">
+              <select name="state" id="state" class="form-select search_bar">
                 <option value="">All Location</option>
-                {% for y in state%}
-                  <option value="{{y.state_id}}" >{{y.state_name}}</option>
+                {% for i in state%}
+                  <option value="{{i.state_id}}">{{i.state_name}}</option>
                 {%endfor%}
               </select>
             </div>
-            <div class="col-2">
-              <button class="btn col-12 btn-primary search_bar" type="submit" id="btn">Search</button>
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+            <div class="col-md-2">
+              <button class="btn btn-primary col-12 search_bar" id="searchbtn" type="button">Search</button>
             </div>
           </div>
         </form>
@@ -74,13 +75,14 @@
   </section>
   <section>
     <div class="container-fluid" >
-      {% for i in records%}
-      <div class="row border my-3 bg-white" class="sp">
-        <div class="col-md-11 m-3">
+      {%if records%}
+      {% for i,y in records%}
+      <div class="row border my-3 bg-white sp">
+        <div class="col-md-11 mb-3">
           <div>
             <div>
               {%if i.sp_image ==None%}
-              <img src="../static/images/profile11.jpg" class="img-fluid m-3 rounded-pill" style="width:3.906vw;">
+              <img src="../static/images/profile11.jpg" class="img-fluid m-3 rounded-pill" style="width:50px;height: 50px;">
               {%else%}
               <img src="/static/uploads/{{i.sp_image}}" class="img-fluid m-3 rounded-pill" style="width:50px;height: 50px;">
               {%endif%}
@@ -98,13 +100,17 @@
         </div>
       </div>
       {%endfor%}
-      <div class="row" class="newsp">
+      {%else%}
+        <h1 class="text-center sp">No Records Found</h1>
+      {%endif%}
+      <div class="row newsp" >
 
       </div>
     </div>
+
   </section>
   <footer>
-    <div class="container-fluid bg-dark text-white p-3">
+    <div class="container-fluid bg-dark text-white p-3" style="position: absolute;bottom:0px;">
       <div class="row">
         <div class="col-md-12 text-center">
             <p class="h1 text text-center" style="font-family: 'Unna', serif;">Contact Us</p>
@@ -128,17 +134,17 @@
   <script src="../static/js/jquery.min.js"></script>
   <script>
     $(document).ready(function(){
-      $('#btn').click(function(){
-        $('.sp').css({'display':'none'})
-      var data=$('#myform').serialize()
-      $.ajax({
-        url:"{{url_for('filter_search')}}",
-        data:data,
-        type:'get',
-        dataType:'text',
-        success:function(response){
-          $('.newsp').html(response)
-        }
+      $('#searchbtn').click(function(){
+        $('.sp').hide()
+        var data=$('#myform').serialize()
+        $.ajax({
+          url:"{{url_for('filter_search')}}",
+          data:data,
+          type:'get',
+          dataType:'text',
+          success:function(response){
+              $('.newsp').html(response)
+          }
       })
       })
     })

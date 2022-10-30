@@ -3,22 +3,20 @@
 admin@hire.com
 {%endblock%}
 {% block content%}
-  <table class="table table-striped">
+<div class="col-10">
+  <table class="table table-striped ">
     <tr>
-      <th>
+      <th class="text">
         S/N
       </th>
-      <th>
+      <th class="text">
         Fullname
       </th>
-      <th>
+      <th class="text">
         Message
       </th>
-      <th>
-        Time Sent
-      </th>
-      <th>
-        Actions
+      <th class="text">
+        Date Sent
       </th>
     </tr>
     {% if msg%}
@@ -34,8 +32,7 @@ admin@hire.com
         {{i.message_title}}
       </td>
       <td class="text">
-        <a href="/admin/details/{{i.userdeets.sp_id}}">Details|</a>
-        <a href="/admin/delete/{{i.userdeets.sp_id}}" onclick="return confirm('Are You Sure You Want to Delete This User?')">Delete User</a>
+        {{i.message_date}}
       </td>
     </tr>
     {%else%}
@@ -45,4 +42,5 @@ admin@hire.com
     {% endfor%}
     {% endif %}
   </table>
+</div>
 {%endblock%}
