@@ -52,7 +52,15 @@
               <select name="services" id="service" class="form-select search_bar">
                 <option value="">All Services</option>
                 {% for u in service%}
+                {%if search%}
+                {%if search.search_service ==u.service_id%}
+                  <option value="{{u.service_id}}" selected>{{u.service_name}}</option>
+                {%else%}
+                  <option value="{{u.service_id}}" >{{u.service_name}}</option>
+                {%endif%}
+                {%else%}
                   <option value="{{u.service_id}}">{{u.service_name}}</option>
+                {%endif%}
                 {%endfor%}
               </select>
             </div>
@@ -60,7 +68,15 @@
               <select name="state" id="state" class="form-select search_bar">
                 <option value="">All Location</option>
                 {% for i in state%}
+                {%if search%}
+                {%if search.search_state ==i.state_id%}
+                  <option value="{{i.state_id}}" selected>{{i.state_name}}</option>
+                {%else%}
+                  <option value="{{i.state_id}}" >{{i.state_name}}</option>
+                {%endif%}
+                {%else%}
                   <option value="{{i.state_id}}">{{i.state_name}}</option>
+                {%endif%}
                 {%endfor%}
               </select>
             </div>
@@ -110,7 +126,7 @@
 
   </section>
   <footer>
-    <div class="container-fluid bg-dark text-white p-3" style="position: absolute;bottom:0px;">
+    <div class="container-fluid bg-dark text-white p-3" style="position: absolute;bottom: 0;width: 100%;">
       <div class="row">
         <div class="col-md-12 text-center">
             <p class="h1 text text-center" style="font-family: 'Unna', serif;">Contact Us</p>
