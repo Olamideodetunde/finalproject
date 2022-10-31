@@ -1,3 +1,35 @@
 {%extends 'admin/layout.html'%}
 {%block content%}
+<div class="container-fluid p-5">
+  <div class="row p-3 mb-3" style="justify-content: space-around;">
+    <div class="col-md-4 bg-white p-3 rounded" style="box-shadow: 2px 2px 5px;">
+      <a href="{{url_for('all_payments')}}" class="text-center" style=" text-decoration:none; ">
+        <p><i class="fa fa-money-check fa-5x" style="color:black;"></i></p>
+        <h2 style="font-family: Unna,Serif;">All Payments</h2>
+      </a>
+    </div>
+    <div class="col-md-4 bg-white p-3 rounded" style="box-shadow: 2px 2px 5px;">
+      <a href="{{url_for('all_services')}}" class="text-center" style=" text-decoration:none; ">
+        <p><i class="fa fa-bell fa-5x" style="color:black;"></i>
+
+        </p>
+        <h2 style="font-family: Unna,Serif;">All Services</h2>
+      </a>
+    </div>
+  </div>
+  <div class="row p-3 mb-3" style="justify-content: space-around;">
+    <div class="col-md-4 bg-white p-3 rounded" style="box-shadow: 2px 2px 5px;">
+      <a href="{{url_for('all_message')}}" class="text-center" style=" text-decoration:none; ">
+        <p><i class="fa fa-question fa-5x" style="color:black;"></i></p>
+        <h2 style="font-family: Unna,Serif;">All Messages</h2>
+      </a>
+    </div>
+    <div class="col-md-4 bg-white p-3 rounded" style="box-shadow: 2px 2px 5px;">
+      <a href="{{url_for('all_registered')}}" class="text-center" style=" text-decoration:none; ">
+        <p><i class="fa fa-list fa-5x" style="color:black;" aria-hidden="true"></i></p>
+        <h2 style="font-family: Unna,Serif;">All Registrations</h2>
+      </a>
+    </div>
+  </div>
+</div>
 {%endblock%}

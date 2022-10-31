@@ -33,10 +33,13 @@ def profile_page():
       return render_template('user/profx.html',records=records,service=service,state=state)
     else:
       search=db.session.query(Homesearch).filter(Homesearch.search_id==session.get('search')).first()
-      records=db.session.query(Sp,Transaction).join(Transaction).filter(Sp.sp_location==search.search_state,Sp.sp_services==search.search_service,Transaction.trx_status=='paid').all()
-      service=db.session.query(Service).all()
-      state=db.session.query(State).all()
-      return render_template('user/profx.html',records=records,service=service,state=state,search=search)
+      if search:
+        records=db.session.query(Sp,Transaction).join(Transaction).filter(Sp.sp_location==search.search_state,Sp.sp_services==search.search_service,Transaction.trx_status=='paid').all()
+        service=db.session.query(Service).all()
+        state=db.session.query(State).all()
+        return render_template('user/profx.html',records=records,service=service,state=state,search=search)
+      else:
+        return redirect(url_for('home_page'))
   else:
     return redirect(url_for('sp_dashboard'))
 
