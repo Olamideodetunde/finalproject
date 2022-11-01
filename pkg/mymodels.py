@@ -54,7 +54,15 @@ class Review(db.Model):
     review_for = db.Column(db.Integer(),db.ForeignKey('service_providers.sp_id'), nullable=False)
     review_date=db.Column(db.DateTime(), default=datetime.datetime.utcnow())
     sp_deets=db.relationship('Sp',backref='reviewme')
-
+    reply_status= db.Column(db.Enum('True','False'), nullable=True)
+class Spreply(db.Model): 
+    reply_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
+    reply_content = db.Column(db.String(255), nullable=False)
+    reply_by = db.Column(db.Integer(),db.ForeignKey('service_providers.sp_id'), nullable=False)
+    reply_for= db.Column(db.Integer(),db.ForeignKey('review.review_id'), nullable=False)
+    reply_date=db.Column(db.DateTime(), default=datetime.datetime.utcnow())
+    sp=db.relationship('Sp',backref='reply')
+    reviewdeets=db.relationship('Review',backref='reply')
 class Sp(db.Model):
     __tablename__='service_providers' 
     sp_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)

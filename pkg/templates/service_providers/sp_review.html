@@ -1,0 +1,24 @@
+{% extends 'service_providers/layout.html'%}
+{%block title%}
+Your Reviews
+{%endblock%}
+{%block name%}
+{{records.sp_name}}
+{% endblock%}
+{%block email%}
+{{records.sp_email}}
+{% endblock %}
+{%block content%}
+<div class="container-fluid">
+  {%for i in reviews%}
+  <div class="row border my-3 bg-white sp">
+    <div class="col-md-11">
+      <div>
+        <p>{{i.review_by}} has reviewed your service</p>
+        <a href="/sp_reply/{{i.review_id}}" class="btn btn-primary">Reply</a>
+      </div>
+    </div>
+  </div>
+  {%endfor%}
+</div>
+{%endblock%}

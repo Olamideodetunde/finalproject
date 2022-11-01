@@ -3,15 +3,15 @@ import os,random,string
 import requests
 from flask import render_template,request,redirect,url_for,flash,session,jsonify,json
 from werkzeug.security import check_password_hash,generate_password_hash
-from pkg.mymodels import Review, Sp,State,Service,Message,Homesearch, Subscription,Transaction,Payment
+from pkg.mymodels import Review, Sp, Spreply,State,Service,Message,Homesearch, Subscription,Transaction,Payment
 from pkg import hireapp,db
-from pkg.forms import MessageForm, Signup,Login,Profile
+from pkg.forms import MessageForm, Reply, Signup,Login,Profile
 @hireapp.route('/',methods=['POST','GET'])
 def home_page():
   records=db.session.query(State).all()
   service=db.session.query(Service).all()
   if request.method =='GET':
-    return render_template('user/hire.html',state=records,service=service)
+    return render_template('user/index.html',state=records,service=service)
   else:
     if session.get('loggedin')==None:
       services=request.form.get('services')
@@ -218,6 +218,38 @@ def paystack_response():
             return "Payment Failed" 
     else:
         return redirect('/login')
+@hireapp.route('/sp_reviews')
+def sp_reviews():
+  loggedin=session.get('loggedin')
+  if loggedin != None:
+    records=db.session.query(Sp).filter(Sp.sp_id==loggedin).first()
+    reviews=db.session.query(Review).filter(Review.review_for==loggedin).all()
+    return render_template('service_providers/sp_review.html',records=records,reviews=reviews)
+  else:
+    return redirect(url_for('form_page'))
+@hireapp.route('/sp_reply/<id>')
+def sp_reply(id):
+  loggedin=session.get('loggedin')
+  reply=Reply()
+  if loggedin != None:
+    records=db.session.query(Sp).filter(Sp.sp_id==loggedin).first()
+    return render_template('service_providers/sp_reply.html',records=records,reply=reply,id=id)
+  else:
+    return redirect(url_for('form_page'))
+@hireapp.route('/sp_replyget',methods=['GET','POST'])
+def sp_replyget():
+  loggedin=session.get('loggedin')
+  reply=Reply()
+  reply_cont=reply.reply_content.data
+  reply_for=request.form.get('review_id')
+  records=db.session.query(Sp).get(loggedin)
+  reviews=db.session.query(Review).filter(Review.review_for==loggedin,Review.review_id==reply_for).first()
+  r=Spreply(reply_by=loggedin,reply_content=reply_cont,reply_for=reply_for)
+  reviews.reply_status='True'
+  db.session.add(r)
+  db.session.commit()
+  rsp='Your reply has been sent'
+  return rsp
 @hireapp.route('/sp_dashboard')
 def sp_dashboard():
   loggedin=session.get('loggedin')
@@ -261,7 +293,8 @@ def sp_faq():
 def sp_details(id):
   records=db.session.query(Sp).get(id)
   data=db.session.query(Review).filter(Review.review_for==id).all()
-  return render_template('user/details.html',records=records,data=data)
+  reply=db.session.query(Review,Spreply).join(Spreply).filter(Review.review_id==Spreply.reply_for).first()
+  return render_template('user/details.html',records=records,data=data,reply=reply)
 @hireapp.route('/review_details/<id>',methods=['POST','GET'])
 def review_details(id):
     records=db.session.query(Sp).get(id)

@@ -31,6 +31,10 @@ class MessageForm(FlaskForm):
   message = TextAreaField('Enter Your Address',validators=[DataRequired()])
   submit= SubmitField('Send')
 
+class Reply(FlaskForm):
+  reply_content = TextAreaField('Enter Your Reply',validators=[DataRequired()])
+  submit= SubmitField('Send')
+
 class Signup(FlaskForm):
   fname=StringField('First Name',validators=[DataRequired()])
   lname=StringField('Last Name',validators=[DataRequired()])
