@@ -85,7 +85,8 @@ class Homesearch(db.Model):
     search_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
     search_state=db.Column(db.Integer(), nullable=True)
     search_service=db.Column(db.Integer(), nullable=True)
-class Message(db.Model): 
+class Spmessage(db.Model):
+    __tablename__='message' 
     message_id = db.Column(db.Integer(), primary_key=True,autoincrement=True)
     message_content = db.Column(db.String(255), nullable=False)
     message_title=db.Column(db.String(255),nullable=False)

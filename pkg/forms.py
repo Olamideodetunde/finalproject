@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired,Length,Email,EqualTo
 class Login(FlaskForm):
   emailadd=StringField('Email Address',validators=[DataRequired(),Email()])
   password = PasswordField('Password',validators=[DataRequired(),Length(8,16)])
-  submit= SubmitField('Submit')
+  submit= SubmitField('Login')
 class SeviceForm(FlaskForm):
   service_name=StringField('Service Name')
   submit= SubmitField('Submit')
@@ -29,6 +29,11 @@ class Profile(FlaskForm):
 class MessageForm(FlaskForm):
   title=StringField('First Name',validators=[DataRequired()])
   message = TextAreaField('Enter Your Address',validators=[DataRequired()])
+  submit= SubmitField('Send')
+
+class ReviewForm(FlaskForm):
+  user_name=StringField('First Name',validators=[DataRequired()])
+  review = TextAreaField('Enter Your Address',validators=[DataRequired()])
   submit= SubmitField('Send')
 
 class Reply(FlaskForm):

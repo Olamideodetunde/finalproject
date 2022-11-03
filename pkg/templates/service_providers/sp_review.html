@@ -11,6 +11,7 @@ Your Reviews
 {%block content%}
 <div class="container-fluid">
   {%for i in reviews%}
+  {%if i.reply_status != 'True'%}
   <div class="row border my-3 bg-white sp">
     <div class="col-md-11">
       <div>
@@ -19,6 +20,7 @@ Your Reviews
       </div>
     </div>
   </div>
+  {%endif%}
   {%endfor%}
 </div>
 {%endblock%}

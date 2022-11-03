@@ -1,11 +1,12 @@
 from datetime import datetime,timedelta
 import os,random,string
 import requests
+from flask_mail import Message
 from flask import render_template,request,redirect,url_for,flash,session,jsonify,json
 from werkzeug.security import check_password_hash,generate_password_hash
-from pkg.mymodels import Review, Sp, Spreply,State,Service,Message,Homesearch, Subscription,Transaction,Payment
+from pkg.mymodels import Review, Sp, Spreply,State,Service,Spmessage,Homesearch, Subscription,Transaction,Payment
 from pkg import hireapp,db
-from pkg.forms import MessageForm, Reply, Signup,Login,Profile
+from pkg.forms import MessageForm, Reply, ReviewForm, Signup,Login,Profile
 @hireapp.route('/',methods=['POST','GET'])
 def home_page():
   records=db.session.query(State).all()
@@ -221,6 +222,7 @@ def paystack_response():
 @hireapp.route('/sp_reviews')
 def sp_reviews():
   loggedin=session.get('loggedin')
+  
   if loggedin != None:
     records=db.session.query(Sp).filter(Sp.sp_id==loggedin).first()
     reviews=db.session.query(Review).filter(Review.review_for==loggedin).all()
@@ -273,7 +275,7 @@ def sp_messageget():
   if session.get('loggedin')!=None:
     title=request.form.get('title')
     content=request.form.get('message')
-    rec=Message(message_title=title,message_content=content,message_by=session.get('loggedin'))
+    rec=Spmessage(message_title=title,message_content=content,message_by=session.get('loggedin'))
     db.session.add(rec)
     db.session.commit()
     rsp='Your message has been received. We will get back to you in due time'
@@ -284,17 +286,20 @@ def sp_messageget():
 @hireapp.route('/sp_faq')
 def sp_faq():
   if session.get('loggedin')!=None:
-    msg=db.session.query(Message).limit(5).all()
+    msg=db.session.query(Spmessage).limit(5).all()
     records=db.session.query(Sp).filter(Sp.sp_id==session.get('loggedin')).first()
     return render_template('service_providers/faq.html',message=msg,records=records)
   else:
     return redirect(url_for('form_page'))
 @hireapp.route('/sp_details/<id>',methods=['POST','GET'])
 def sp_details(id):
+  v=ReviewForm()
   records=db.session.query(Sp).get(id)
   data=db.session.query(Review).filter(Review.review_for==id).all()
-  reply=db.session.query(Review,Spreply).join(Spreply).filter(Review.review_id==Spreply.reply_for).first()
-  return render_template('user/details.html',records=records,data=data,reply=reply)
+  reply=db.session.query(Spreply).all()
+  for i in reply:
+    x=i
+  return render_template('user/details.html',records=records,data=data,reply=x,v=v)
 @hireapp.route('/review_details/<id>',methods=['POST','GET'])
 def review_details(id):
     records=db.session.query(Sp).get(id)

@@ -104,14 +104,31 @@
   <section>
     <div class="container-fluid bg-white p-3" >
       <h3 class="text-center" style="font-family: Unna,Serif;">Some Rate and Review</h3>
-        {%for i in data%}
-        {%if reply%}
-        {%if i.review_id ==reply.reply_for%}
+      {%for i in data%}
+        {%if i.review_id == reply.reply_for%}
         <div class="row m-3" id="commentdisplay">
         <div class="col-10 border" >
           <div>
             <p class="text">{{i.review_content}}</p>
             <small><i><b>Made By</b> {{i.review_by}}</i></small>
+            <small><a data-bs-toggle="modal" data-bs-target="#staticBackdrop">1 reply</a></small>
+          <!-- Modal -->
+          <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Review</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  {{reply.reply_content}}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
           </div>
         </div>
        </div>
@@ -121,29 +138,20 @@
           <div>
             <p class="text">{{i.review_content}}</p>
             <small><i><b>Made By</b> {{i.review_by}}</i></small>
+            <small>No reply</small>
           </div>
         </div>
        </div>
        {%endif%}
-       {%else%}
-       <div class="row m-3" id="commentdisplay">
-        <div class="col-10 border" >
-          <div>
-            <p class="text">{{i.review_content}}</p>
-            <small><i><b>Made By</b> {{i.review_by}}</i></small>
-          </div>
-        </div>
-       </div>
-       {%endif%}
-        {%endfor%}
+      {%endfor%}
       <div class="row m-2">
         <div class="col-md-10 p-3 border">
           <form action="" method="post" id="form">
             <div class="mb-3">
-              <input type="text" placeholder="Enter Your Name" id="name" name="user_name" class="form-control">
+              {{v.user_name( placeholder="Enter Your Name", class_="form-control")}}
             </div>
             <div class="mb-3">
-              <textarea name="review" id="review" placeholder="Review The Service" cols="30" rows="2" class="form-control"></textarea>
+              {{v.review( placeholder="Enter Your Name", class_="form-control",cols="30", rows="2")}}
             </div>
               <p class="text-center"><button class="btn btn-primary" type="button" id="btn">Review</button></p>
               <input type="hidden" name="csrf_token" value="{{csrf_token()}}">

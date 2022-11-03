@@ -3,7 +3,7 @@ from flask import render_template,request,redirect,url_for,flash,session,jsonify
 from werkzeug.security import check_password_hash,generate_password_hash
 from pkg import hireapp,db
 from pkg.forms import AdminForm,SeviceForm,PriceForm
-from pkg.mymodels import Admin, Message, Service,Sp,Payment,State, Subscription, Transaction
+from pkg.mymodels import Admin, Spmessage, Service,Sp,Payment,State, Subscription, Transaction
 @hireapp.route('/admin/login',methods=['POST','GET'])
 def admin_login():
   if request.method=='GET':
@@ -92,7 +92,7 @@ def all_services():
 def all_message():
   admin_user=session.get('admin')
   if admin_user:
-    msg=db.session.query(Message).all()
+    msg=db.session.query(Spmessage).all()
     return render_template('admin/all_message.html',msg=msg)
   else:
     return redirect('/admin/login')
