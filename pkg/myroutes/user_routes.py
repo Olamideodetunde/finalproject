@@ -297,9 +297,12 @@ def sp_details(id):
   records=db.session.query(Sp).get(id)
   data=db.session.query(Review).filter(Review.review_for==id).all()
   reply=db.session.query(Spreply).all()
-  for i in reply:
-    x=i
-  return render_template('user/details.html',records=records,data=data,reply=x,v=v)
+  if reply:
+    for i in reply:
+      x=i
+    return render_template('user/details.html',records=records,data=data,reply=x,v=v)
+  else:
+    return render_template('user/details.html',records=records,data=data,reply='',v=v)
 @hireapp.route('/review_details/<id>',methods=['POST','GET'])
 def review_details(id):
     records=db.session.query(Sp).get(id)
