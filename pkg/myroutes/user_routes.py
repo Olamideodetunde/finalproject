@@ -137,10 +137,15 @@ def signup_page():
     service=request.form.get('service')
     gender=request.form.get('gender')
     location=request.form.get('state')
-    b=Sp(sp_email=emailadd,sp_password=pwd,sp_fname=fname,sp_lname=lname,sp_location=location,sp_phone=phone,sp_address=addresss,sp_gender=gender,sp_services=service)
-    db.session.add(b)
-    db.session.commit()
-    return redirect(url_for('form_page'))
+    email=db.session.query(Sp).filter(Sp.sp_email==emailadd).first()
+    phone=db.session.query(Sp).filter(Sp.sp_phone==phone).first()
+    if email==None and phone==None:
+      b=Sp(sp_email=emailadd,sp_password=pwd,sp_fname=fname,sp_lname=lname,sp_location=location,sp_phone=phone,sp_address=addresss,sp_gender=gender,sp_services=service)
+      db.session.add(b)
+      db.session.commit()
+      return redirect(url_for('form_page'))
+    else:
+      return redirect(url_for('signup_page'))
 @hireapp.route('/sp_payment',methods=['POST','GET'])
 def sp_payment():
   if session.get('loggedin') != None:
