@@ -5,7 +5,7 @@ from flask_mail import Message
 from flask import render_template,request,redirect,url_for,flash,session,jsonify,json
 from werkzeug.security import check_password_hash,generate_password_hash
 from pkg.mymodels import Review, Sp, Spreply,State,Service,Spmessage,Homesearch, Subscription,Transaction,Payment
-from pkg import hireapp,db
+from pkg import hireapp,db,mail
 from pkg.forms import MessageForm, Reply, ReviewForm, Signup,Login,Profile
 @hireapp.route('/',methods=['POST','GET'])
 def home_page():
@@ -143,6 +143,19 @@ def signup_page():
       b=Sp(sp_email=emailadd,sp_password=pwd,sp_fname=fname,sp_lname=lname,sp_location=location,sp_phone=phone,sp_address=addresss,sp_gender=gender,sp_services=service)
       db.session.add(b)
       db.session.commit()
+      m=Message(subject='Welcome to Hire Team',sender='olamideode574@gmail.com',recipients=[emailadd])
+      m.html=f"""
+        <div>
+          <h1>Welcome to the Team</h1>
+          <p><b>your details are as follows:</b></p>
+          <ul>
+            <li>FullName:{fname} {lname}</li>
+            <li>Phone Number:{phone}</li>
+            <li>Email Address:{emailadd}</li>
+          </ul>
+        </div>
+      """
+      mail.send(m)
       return redirect(url_for('form_page'))
     else:
       return redirect(url_for('signup_page'))
