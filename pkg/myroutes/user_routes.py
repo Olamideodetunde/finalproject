@@ -131,16 +131,16 @@ def signup_page():
     fname=y.fname.data
     lname=y.lname.data
     emailadd=y.emailadd.data
-    phone=y.phone.data
+    phoneno=y.phone.data
     pwd=generate_password_hash(y.password.data)
     addresss=y.address.data
     service=request.form.get('service')
     gender=request.form.get('gender')
     location=request.form.get('state')
     email=db.session.query(Sp).filter(Sp.sp_email==emailadd).first()
-    phone=db.session.query(Sp).filter(Sp.sp_phone==phone).first()
+    phone=db.session.query(Sp).filter(Sp.sp_phone==phoneno).first()
     if email==None and phone==None:
-      b=Sp(sp_email=emailadd,sp_password=pwd,sp_fname=fname,sp_lname=lname,sp_location=location,sp_phone=phone,sp_address=addresss,sp_gender=gender,sp_services=service)
+      b=Sp(sp_email=emailadd,sp_password=pwd,sp_fname=fname,sp_lname=lname,sp_location=location,sp_phone=phoneno,sp_address=addresss,sp_gender=gender,sp_services=service)
       db.session.add(b)
       db.session.commit()
       m=Message(subject='Welcome to Hire Team',sender='olamideode574@gmail.com',recipients=[emailadd])
@@ -150,7 +150,7 @@ def signup_page():
           <p><b>your details are as follows:</b></p>
           <ul>
             <li>FullName:{fname} {lname}</li>
-            <li>Phone Number:{phone}</li>
+            <li>Phone Number:{phoneno}</li>
             <li>Email Address:{emailadd}</li>
           </ul>
         </div>
