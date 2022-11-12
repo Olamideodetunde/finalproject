@@ -8,6 +8,18 @@ Subscribe
 {%block email%}
 {{spdetails.sp_email}}
 {% endblock%}
+{% block  image%}
+{% if records.sp_image==None %}
+<div class="rounded-pill bg-white text-center" style="width: 30px;height:30px;">
+  <i class="fa-solid fa-user"></i>
+</div>
+{% else %}
+<div class="rounded-pill bg-white text-center" style="width: 30px;height:30px;">
+  <img src='/static/uploads/{{records.sp_image}}' class="rounded-pill img-fluid bg-white text-center" style="width: 30px;height:30px;"/>
+</div>
+{% endif %}
+
+{% endblock%}
 {% block content %}
 {%if transdeets.trx_status =='paid'%}
 <div class="container-fluid">

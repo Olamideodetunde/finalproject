@@ -105,9 +105,11 @@
                 </p>
               </div>
               <div class="border rounded-pill tobe d-flex  p-2">
+                {% block image %}
                 <div class="rounded-pill bg-white text-center" style="width: 30px;height:30px;">
-                  <i class="fa-solid fa-user"></i>
+                    <i class="fa-solid fa-user"></i>
                 </div>
+                {% endblock image %}
                 <span>
                   {% block email %}
                   {% endblock %}

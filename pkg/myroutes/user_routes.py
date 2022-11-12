@@ -163,10 +163,11 @@ def signup_page():
 def sp_payment():
   if session.get('loggedin') != None:
     if request.method=='GET':
+      records=db.session.query(Sp).filter(Sp.sp_id==session.get('loggedin')).first()
       sub=db.session.query(Subscription).first()
       spdetails=db.session.query(Sp).filter(Sp.sp_id==session.get('loggedin')).first()
       transdeets=db.session.query(Transaction).filter(Transaction.trx_status=='paid',Transaction.trx_user==session.get('loggedin')).first()
-      return render_template('service_providers/payment.html',sub=sub,spdetails=spdetails,transdeets=transdeets)
+      return render_template('service_providers/payment.html',sub=sub,spdetails=spdetails,transdeets=transdeets,records=records)
     else:
         userid = session.get('loggedin')
         refno = int(random.random() * 1000000000)
@@ -274,10 +275,10 @@ def sp_replyget():
 def sp_dashboard():
   loggedin=session.get('loggedin')
   if loggedin != None:
-    records=db.session.query(Sp).filter(Sp.sp_id==loggedin).first()
+    records=db.session.query(Sp).filter(Sp.sp_id==session.get('loggedin')).first()
     name=records.sp_fname
     emailx=records.sp_email
-    return render_template('service_providers/sp_dashboard.html',emailx=emailx,name=name)
+    return render_template('service_providers/sp_dashboard.html',emailx=emailx,name=name,records=records)
   else:
     return redirect(url_for('form_page'))
 @hireapp.route('/sp_message',methods=['POST','GET'])

@@ -8,6 +8,18 @@ Dashboard
 {%block email%}
 {{emailx}}
 {% endblock %}
+{% block  image%}
+{% if records.sp_image==None %}
+<div class="rounded-pill bg-white text-center" style="width: 30px;height:30px;">
+  <i class="fa-solid fa-user"></i>
+</div>
+{% else %}
+<div class="rounded-pill bg-white text-center" style="width: 30px;height:30px;">
+  <img src='/static/uploads/{{records.sp_image}}' class="rounded-pill img-fluid bg-white text-center" style="width: 30px;height:30px;"/>
+</div>
+{% endif %}
+
+{% endblock%}
 {%block content%}
 <div class="container-fluid p-5">
   <div class="row p-3 mb-3" style="justify-content: space-around;">

@@ -8,6 +8,18 @@ Frequently Asked Questions
 {%block email%}
 {{records.sp_email}}
 {% endblock%}
+{% block  image%}
+{% if records.sp_image==None %}
+<div class="rounded-pill bg-white text-center" style="width: 30px;height:30px;">
+  <i class="fa-solid fa-user"></i>
+</div>
+{% else %}
+<div class="rounded-pill bg-white text-center" style="width: 30px;height:30px;">
+  <img src='/static/uploads/{{records.sp_image}}' class="rounded-pill img-fluid bg-white text-center" style="width: 30px;height:30px;"/>
+</div>
+{% endif %}
+
+{% endblock%}
 {% block content%}
 <div class="col-md-6 my-2 p-3 rounded" style="background-color: rgb(223, 223, 223);border: 1px solid rgb(90, 89, 89);">
   <h4 id="faq" class="text-center text-primary title2" style="font-family:'Unna', serif;">FREQUENTLY ASKED QUESTIONS</h4>
